@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Supplier Tree View -->
+    <record id="view_x_pos_supplier_tree" model="ir.ui.view">
+        <field name="name">x_pos_supplier.tree</field>
+        <field name="model">x_pos_supplier</field>
+        <field name="arch" type="xml">
+            <list string="Daftar Supplier">
+                <field name="x_name"/>
+                <field name="x_phone"/>
+                <field name="x_address"/>
+                <field name="x_is_active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Supplier Form View -->
+    <record id="view_x_pos_supplier_form" model="ir.ui.view">
+        <field name="name">x_pos_supplier.form</field>
+        <field name="model">x_pos_supplier</field>
+        <field name="arch" type="xml">
+            <form string="Data Supplier">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="x_name" string="Nama Pemasok / Supplier"/>
+                        <h1>
+                            <field name="x_name" placeholder="Contoh: PT Tekstil Maju Jaya, Toko Kain Sentosa"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Kontak &amp; Alamat">
+                            <field name="x_phone" placeholder="0812xxxx"/>
+                            <field name="x_address" placeholder="Alamat gudang / kantor supplier"/>
+                        </group>
+                        <group string="Status">
+                            <field name="x_is_active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Riwayat Pembelian" name="purchases">
+                            <field name="x_purchase_ids" readonly="1">
+                                <list string="Daftar Nota Pembelian">
+                                    <field name="x_name"/>
+                                    <field name="x_purchase_date"/>
+                                    <field name="x_total_cost" widget="monetary"/>
+                                    <field name="x_state" widget="badge" decoration-success="x_state == 'done'" decoration-muted="x_state == 'draft'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Supplier Action Window -->
+    <record id="action_x_pos_supplier" model="ir.actions.act_window">
+        <field name="name">Supplier &amp; Pemasok</field>
+        <field name="res_model">x_pos_supplier</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

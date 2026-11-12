@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_x_pos_item_all,x_pos_item.all,model_x_pos_item,base.group_user,1,1,1,1
+access_x_pos_unit_all,x_pos_unit.all,model_x_pos_unit,base.group_user,1,1,1,1
+access_x_pos_supplier_all,x_pos_supplier.all,model_x_pos_supplier,base.group_user,1,1,1,1
+access_x_pos_purchase_all,x_pos_purchase.all,model_x_pos_purchase,base.group_user,1,1,1,1
+access_x_pos_purchase_line_all,x_pos_purchase_line.all,model_x_pos_purchase_line,base.group_user,1,1,1,1
+access_x_pos_batch_all,x_pos_batch.all,model_x_pos_batch,base.group_user,1,1,1,1
+access_x_pos_order_all,x_pos_order.all,model_x_pos_order,base.group_user,1,1,1,1
+access_x_pos_order_line_all,x_pos_order_line.all,model_x_pos_order_line,base.group_user,1,1,1,1
+access_x_pos_expense_all,x_pos_expense.all,model_x_pos_expense,base.group_user,1,1,1,1
+access_x_pos_production_all,x_pos_production.all,model_x_pos_production,base.group_user,1,1,1,1

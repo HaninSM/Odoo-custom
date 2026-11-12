@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Production List View -->
+    <record id="view_x_pos_production_tree" model="ir.ui.view">
+        <field name="name">x_pos_production.tree</field>
+        <field name="model">x_pos_production</field>
+        <field name="arch" type="xml">
+            <list string="Riwayat Produksi Jahit Sprei">
+                <field name="x_name" string="No. Perintah"/>
+                <field name="x_production_date" string="Tgl Jahit"/>
+                <field name="x_item_id" string="Bahan Kain Mentah"/>
+                <field name="x_variant_id" string="Hasil Sprei Jadi"/>
+                <field name="x_qty_produced" string="Qty Jadi (Pcs)"/>
+                <field name="x_base_qty_used" string="Kain Terpakai (m)"/>
+                <field name="x_unit_cost" widget="monetary" string="HPP Komposit / Pcs"/>
+                <field name="x_total_cost" widget="monetary" string="Total Biaya"/>
+                <field name="x_state" widget="badge" decoration-success="x_state == 'done'" decoration-warning="x_state == 'draft'" string="Status"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Production Form View -->
+    <record id="view_x_pos_production_form" model="ir.ui.view">
+        <field name="name">x_pos_production.form</field>
+        <field name="model">x_pos_production</field>
+        <field name="arch" type="xml">
+            <form string="Perintah Jahit &amp; Produksi Sprei">
+                <header>
+                    <button name="action_confirm_production" type="object" string="✂️ Selesaikan Jahit &amp; Pindahkan ke Rak Toko" class="btn btn-primary" invisible="x_state != 'draft'"/>
+                    <field name="x_state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="x_name" string="No. Perintah Jahit"/>
+                        <h1>
+                            <field name="x_name" readonly="x_state == 'done'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Komponen Bahan Mentah &amp; Hasil Sprei">
+                            <field name="x_production_date" readonly="x_state == 'done'"/>
+                            <field name="x_item_id" readonly="x_state == 'done'"/>
+                            <field name="x_variant_id" readonly="x_state == 'done'"/>
+                            <field name="x_qty_produced" readonly="x_state == 'done'"/>
+                            <field name="x_kebutuhan_per_pcs" readonly="x_state == 'done'"/>
+                            <field name="x_base_qty_used" readonly="1"/>
+                        </group>
+                        <group string="Akumulasi Biaya &amp; HPP Komposit">
+                            <field name="x_raw_material_cost" readonly="1" widget="monetary"/>
+                            <field name="x_labor_cost_per_unit" readonly="x_state == 'done'" widget="monetary"/>
+                            <field name="x_accessory_cost_per_unit" readonly="x_state == 'done'" widget="monetary"/>
+                            <field name="x_total_cost" readonly="1" widget="monetary" class="fw-bold text-primary"/>
+                            <field name="x_unit_cost" readonly="1" widget="monetary" class="fw-bold fs-4 text-success"/>
+                            <field name="x_notes" placeholder="Catatan kelompok penjahit, nomor nota aksesoris, dll."/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Production Action Window -->
+    <record id="action_x_pos_production" model="ir.actions.act_window">
+        <field name="name">✂️ Produksi &amp; Jahit Sprei</field>
+        <field name="res_model">x_pos_production</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

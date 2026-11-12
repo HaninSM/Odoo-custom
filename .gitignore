@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Builds & temporary files
+build/
+**/build/
+.cache/
+**/.cache/
+dist/
+**/dist/
+.remotion/
+**/.remotion/
+
+# Python compiled
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Sensitive environment files & logs
+.env
+.env.local
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini

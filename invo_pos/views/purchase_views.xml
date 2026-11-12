@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Purchase Tree View -->
+    <record id="view_x_pos_purchase_tree" model="ir.ui.view">
+        <field name="name">x_pos_purchase.tree</field>
+        <field name="model">x_pos_purchase</field>
+        <field name="arch" type="xml">
+            <list string="Nota Pembelian &amp; Restock">
+                <field name="x_name"/>
+                <field name="x_supplier_id"/>
+                <field name="x_purchase_date"/>
+                <field name="x_payment_term_id" string="Syarat Pembayaran"/>
+                <field name="x_due_date" string="Jatuh Tempo"/>
+                <field name="x_total_cost" widget="monetary" sum="Total Biaya"/>
+                <field name="x_payment_state" widget="badge" decoration-danger="x_payment_state == 'not_paid'" decoration-warning="x_payment_state == 'partially_paid'" decoration-success="x_payment_state == 'paid'"/>
+                <field name="x_state" widget="badge" decoration-success="x_state == 'done'" decoration-warning="x_state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Purchase Form View -->
+    <record id="view_x_pos_purchase_form" model="ir.ui.view">
+        <field name="name">x_pos_purchase.form</field>
+        <field name="model">x_pos_purchase</field>
+        <field name="arch" type="xml">
+            <form string="Nota Pembelian &amp; Restock">
+                <header>
+                    <button name="action_confirm" type="object" string="✅ Terima Barang, Sinkronkan HPP &amp; Buat Tagihan AP" class="btn btn-primary" invisible="x_state != 'draft'"/>
+                    <field name="x_state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="x_name" string="Nomor Pembelian"/>
+                        <h1>
+                            <field name="x_name" readonly="x_state == 'done'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Pemasok &amp; Syarat Pembayaran">
+                            <field name="x_supplier_id" readonly="x_state == 'done'"/>
+                            <field name="x_purchase_date" readonly="x_state == 'done'"/>
+                            <field name="x_payment_term_id" readonly="x_state == 'done'"/>
+                            <field name="x_due_date" readonly="x_state == 'done'"/>
+                        </group>
+                        <group string="Total, Hutang &amp; Tagihan">
+                            <field name="x_total_cost" readonly="1" class="fw-bold fs-4 text-primary"/>
+                            <field name="x_payment_state" widget="badge" decoration-danger="x_payment_state == 'not_paid'" decoration-warning="x_payment_state == 'partially_paid'" decoration-success="x_payment_state == 'paid'"/>
+                            <field name="x_invoice_id" readonly="1"/>
+                            <field name="x_notes" placeholder="Catatan invoice supplier, nomor resi pengiriman, dsb."/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="📦 Rincian Barang Restock" name="lines">
+                            <field name="x_line_ids" readonly="x_state == 'done'">
+                                <list editable="bottom" string="Item Pembelian">
+                                    <field name="x_item_id"/>
+                                    <field name="x_unit_purchased" placeholder="Kodi, Roll, Dus, Bal"/>
+                                    <field name="x_quantity_purchased" string="Qty Beli"/>
+                                    <field name="x_conversion_factor" string="Faktor Konversi"/>
+                                    <field name="x_total_base_qty" string="Total Satuan Dasar"/>
+                                    <field name="x_base_unit" string="Satuan Dasar"/>
+                                    <field name="x_subtotal_cost" widget="monetary" string="Total Biaya Beli (Rp)"/>
+                                    <field name="x_base_cost_price" widget="monetary" string="HPP Modal/Satuan Dasar"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="🏷️ Batch Persediaan FIFO Dihasilkan" name="batches" invisible="x_state != 'done'">
+                            <field name="x_batch_ids" readonly="1">
+                                <list string="Batch Stok">
+                                    <field name="x_item_name"/>
+                                    <field name="x_received_date"/>
+                                    <field name="x_initial_quantity" string="Stok Masuk"/>
+                                    <field name="x_remaining_quantity" string="Sisa Stok"/>
+                                    <field name="x_base_cost_price" widget="monetary" string="HPP Modal"/>
+                                    <field name="x_state" widget="badge" decoration-success="x_state == 'active'" decoration-danger="x_state == 'depleted'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Purchase Action Window -->
+    <record id="action_x_pos_purchase" model="ir.actions.act_window">
+        <field name="name">Pembelian &amp; Restock</field>
+        <field name="res_model">x_pos_purchase</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

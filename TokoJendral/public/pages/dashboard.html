@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invo. POS - Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="app-body">
+  <div class="window-wrapper">
+    <div class="dashboard-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+          <!-- Window decorative dots -->
+          <div class="window-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          
+          <!-- Brand Logo -->
+          <div class="brand-logo">
+            <div class="logo-cube">
+              <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+                <path d="M16 2L3 9.5V22.5L16 30L29 22.5V9.5L16 2Z" stroke="#1a62ff" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M16 2V30M3 9.5L29 22.5M29 9.5L3 22.5" stroke="#1a62ff" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="brand-name">Invo<strong>.</strong></span>
+          </div>
+        </div>
+
+        <!-- Navigation items rendered by Sidebar.js -->
+        <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <button class="nav-item logout-item" onclick="API.logout()">
+            <span class="icon">⬅</span>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Modern Top Header -->
+        <header class="main-header">
+          <div class="header-left">
+            <h1 class="page-title" id="pageTitle">Dashboard</h1>
+            <div class="search-bar">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Tap to search" id="globalSearchInput" onkeyup="if(event.key==='Enter') App.toast('Fitur pencarian global: ' + this.value, 'info')" />
+            </div>
+          </div>
+
+          <div class="header-right">
+            <div id="headerActions" class="header-actions"></div>
+
+            <div class="header-action-bell" title="Notifikasi Sistem" onclick="App.toast('Sistem siap dan beroperasi normal.', 'info')">
+              <span class="bell-icon">🔔</span>
+              <span class="notif-badge">0</span>
+            </div>
+
+            <div class="user-profile-widget" onclick="App.navigate('settings')" title="Klik untuk Pengaturan Akun">
+              <div class="avatar-circle">
+                <span style="font-size:18px;">👤</span>
+              </div>
+              <div class="user-profile-meta">
+                <span class="user-name" id="userName">Admin Pemilik</span>
+                <span class="user-role" id="userRole">OWNER</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <div class="content-area" id="contentArea"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/utils/format.js"></script>
+  <script src="/js/components/Sidebar.js"></script>
+  <script src="/js/components/Dashboard.js"></script>
+  <script src="/js/components/POS.js"></script>
+  <script src="/js/components/Inventory.js"></script>
+  <script src="/js/components/Purchases.js"></script>
+  <script src="/js/components/Products.js"></script>
+  <script src="/js/components/Suppliers.js"></script>
+  <script src="/js/components/Transactions.js"></script>
+  <script src="/js/components/Reports.js"></script>
+  <script src="/js/components/Expenses.js"></script>
+  <script src="/js/components/Settings.js"></script>
+  <script src="/js/components/Users.js"></script>
+  <script src="/js/components/Developer.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

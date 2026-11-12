@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Unit List View -->
+    <record id="view_x_pos_unit_tree" model="ir.ui.view">
+        <field name="name">x_pos_unit.tree</field>
+        <field name="model">x_pos_unit</field>
+        <field name="arch" type="xml">
+            <list string="Produk &amp; Satuan Jual">
+                <field name="x_display_name" string="Produk &amp; Satuan"/>
+                <field name="x_conversion_factor" string="Kebutuhan Bahan"/>
+                <field name="x_base_unit" string="Satuan Dasar"/>
+                <field name="x_pricing_method" string="Metode Harga"/>
+                <field name="x_selling_price" widget="monetary" string="Harga Jual"/>
+                <field name="x_stock_mode" widget="badge" decoration-info="x_stock_mode == 'floating'" decoration-warning="x_stock_mode == 'allocated'"/>
+                <field name="x_available_sale_stock" string="Stok Siap Jual"/>
+                <field name="x_reseller_visible" widget="boolean_toggle" string="Reseller"/>
+                <field name="x_is_active" widget="boolean_toggle" string="Aktif"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Product Unit Kanban View (Katalog Kasir / Visual Cards) -->
+    <record id="view_x_pos_unit_kanban" model="ir.ui.view">
+        <field name="name">x_pos_unit.kanban</field>
+        <field name="model">x_pos_unit</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="x_display_name"/>
+                <field name="x_item_name"/>
+                <field name="x_name"/>
+                <field name="x_selling_price"/>
+                <field name="x_available_sale_stock"/>
+                <field name="x_stock_mode"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column justify-content-between p-2">
+                            <div>
+                                <span class="badge text-bg-light mb-1"><field name="x_item_name"/></span>
+                                <h4 class="fw-bold mb-1 text-primary"><field name="x_name"/></h4>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div>
+                                    <span class="fs-5 fw-bold text-success">
+                                        Rp <field name="x_selling_price"/>
+                                    </span>
+                                </div>
+                                <div class="text-end">
+                                    <span t-attf-class="badge #{record.x_stock_mode.raw_value == 'allocated' ? 'text-bg-warning' : 'text-bg-info'}">
+                                        Stok: <field name="x_available_sale_stock"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Product Unit Form View -->
+    <record id="view_x_pos_unit_form" model="ir.ui.view">
+        <field name="name">x_pos_unit.form</field>
+        <field name="model">x_pos_unit</field>
+        <field name="arch" type="xml">
+            <form string="Satuan Jual &amp; Varian">
+                <header>
+                    <button name="action_reset_to_floating" type="object" string="🌊 Reset ke Floating Pool" class="btn btn-secondary" invisible="x_stock_mode != 'allocated'"/>
+                    <button name="action_switch_to_allocated" type="object" string="📦 Alokasikan Kuota Fisik" class="btn btn-outline-primary" invisible="x_stock_mode != 'floating'"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="x_name" string="Nama Satuan Jual"/>
+                        <h1>
+                            <field name="x_name" placeholder="Contoh: Sprei M, Dus 24, Lusin, PCS"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Barang Induk &amp; Konversi Bahan">
+                            <field name="x_item_id" options="{'no_create': True}"/>
+                            <field name="x_conversion_factor"/>
+                            <field name="x_base_unit"/>
+                        </group>
+                        <group string="Skema Penetapan Harga Jual">
+                            <field name="x_pricing_method"/>
+                            <field name="x_margin_percentage" invisible="x_pricing_method != 'percentage_margin'"/>
+                            <field name="x_selling_price"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Pengelolaan Stok Jual (Dual-Mode)">
+                            <field name="x_stock_mode"/>
+                            <field name="x_allocated_stock" invisible="x_stock_mode != 'allocated'"/>
+                            <field name="x_available_sale_stock" readonly="1" class="fw-bold text-primary"/>
+                        </group>
+                        <group string="Atribut &amp; Hak Akses">
+                            <field name="x_is_bundle" widget="boolean_toggle"/>
+                            <field name="x_reseller_visible" widget="boolean_toggle"/>
+                            <field name="x_is_active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Product Unit Search View -->
+    <record id="view_x_pos_unit_search" model="ir.ui.view">
+        <field name="name">x_pos_unit.search</field>
+        <field name="model">x_pos_unit</field>
+        <field name="arch" type="xml">
+            <search string="Cari Satuan Jual">
+                <field name="x_name"/>
+                <field name="x_item_id"/>
+                <filter string="Floating Pool (Bebas)" name="filter_floating" domain="[('x_stock_mode', '=', 'floating')]"/>
+                <filter string="Physical Allocation (Teralokasi)" name="filter_allocated" domain="[('x_stock_mode', '=', 'allocated')]"/>
+                <filter string="Katalog Reseller" name="filter_reseller" domain="[('x_reseller_visible', '=', True)]"/>
+                <group expand="0" string="Kelompokkan Berdasarkan">
+                    <filter string="Barang Induk" name="group_by_item" context="{'group_by': 'x_item_id'}"/>
+                    <filter string="Mode Stok" name="group_by_mode" context="{'group_by': 'x_stock_mode'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Product Unit Action Window -->
+    <record id="action_x_pos_unit" model="ir.actions.act_window">
+        <field name="name">Produk &amp; Satuan Jual</field>
+        <field name="res_model">x_pos_unit</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_x_pos_unit_search"/>
+    </record>
+</odoo>

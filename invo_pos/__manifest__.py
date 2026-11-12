@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'Invo. POS & Inventory (Toko Jendral)',
+    'version': '2.2.0',
+    'summary': 'Sistem POS Kasir Otomatis, Inventori FIFO, Dual-Mode Stok, Multi-Satuan Dinamis, Termin Hutang Supplier (Net 30), dan Beban Operasional',
+    'category': 'Point of Sale',
+    'author': 'Invo. / Toko Jendral',
+    'license': 'LGPL-3',
+    'depends': ['base', 'web', 'account'],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/sequence_data.xml',
+        'views/item_views.xml',
+        'views/unit_views.xml',
+        'views/supplier_views.xml',
+        'views/purchase_views.xml',
+        'views/production_views.xml',
+        'views/batch_views.xml',
+        'views/order_views.xml',
+        'views/expense_views.xml',
+        'views/menu_views.xml',
+    ],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+}

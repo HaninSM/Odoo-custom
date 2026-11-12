@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invo. POS - Login</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header" style="text-align: center; margin-bottom: 28px;">
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:14px; background:#eff6ff; margin-bottom:12px;">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <path d="M16 2L3 9.5V22.5L16 30L29 22.5V9.5L16 2Z" stroke="#1a62ff" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M16 2V30M3 9.5L29 22.5M29 9.5L3 22.5" stroke="#1a62ff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h1 style="font-size: 26px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.5px;">Invo<span style="color:#1a62ff;">.</span></h1>
+        <p style="color: #64748b; font-size: 13px; margin-top: 4px;">Point of Sale & Invoicing SaaS System</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Pengguna</label>
+          <input type="email" id="email" name="email" required placeholder="admin@pos.com" value="admin@pos.com">
+        </div>
+        <div class="form-group" style="margin-bottom: 22px;">
+          <label for="password">Kata Sandi</label>
+          <input type="password" id="password" name="password" required placeholder="Password" value="admin123">
+        </div>
+        <div id="loginError" class="error-message" style="display:none;"></div>
+        <button type="submit" class="btn btn-primary btn-full" style="padding: 12px; font-size: 14px; font-weight: 700;">Masuk ke Aplikasi</button>
+      </form>
+
+      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #f1f5f9; text-align: center; font-size: 12px; color: #94a3b8;">
+        Akun Bawaan: <code>admin@pos.com</code> (Owner) | <code>developer@pos.com</code> (Dev)
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (localStorage.getItem('pos_token')) {
+      window.location.href = '/dashboard';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorEl = document.getElementById('loginError');
+      errorEl.style.display = 'none';
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await API.post('/api/auth/login', { email, password });
+        if (res.success) {
+          localStorage.setItem('pos_token', res.data.token);
+          localStorage.setItem('pos_user', JSON.stringify(res.data.user));
+          window.location.href = '/dashboard';
+        } else {
+          errorEl.textContent = res.message || 'Login gagal.';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = err.message || 'Terjadi kesalahan.';
+        errorEl.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Tutorial Lengkap — Sistem POS & Manajemen Inventori v1.6.0</title>
+<style>
+  @page { size: A4; margin: 20mm 18mm 20mm 18mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', 'Arial', sans-serif; font-size: 10.5pt; line-height: 1.65; color: #1f2937; }
+
+  /* Header & Cover */
+  .cover { page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh; text-align: center; }
+  .cover h1 { font-size: 30pt; color: #1a62ff; margin-bottom: 8px; }
+  .cover h2 { font-size: 15pt; color: #6b7280; font-weight: 400; margin-bottom: 30px; }
+  .cover .version-badge { background: #1a62ff; color: white; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 11pt; margin-bottom: 20px; display: inline-block; }
+  .cover .meta { color: #9ca3af; font-size: 10pt; }
+  .cover .logo { font-size: 64pt; margin-bottom: 20px; }
+
+  /* TOC */
+  .toc { page-break-after: always; }
+  .toc h2 { font-size: 18pt; color: #1a62ff; border-bottom: 3px solid #1a62ff; padding-bottom: 8px; margin-bottom: 20px; }
+  .toc ul { list-style: none; }
+  .toc li { padding: 5px 0; border-bottom: 1px dotted #d1d5db; font-size: 10.5pt; }
+  .toc li span.num { display: inline-block; width: 36px; font-weight: 700; color: #1a62ff; }
+
+  /* Change Highlighting Tags */
+  .badge-add { background: #dcfce7; color: #166534; border: 1px solid #86efac; font-weight: 700; padding: 2px 7px; border-radius: 4px; font-size: 8.5pt; display: inline-block; vertical-align: middle; }
+  .badge-mod { background: #fef3c7; color: #92400e; border: 1px solid #fde047; font-weight: 700; padding: 2px 7px; border-radius: 4px; font-size: 8.5pt; display: inline-block; vertical-align: middle; }
+  .badge-del { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; font-weight: 700; padding: 2px 7px; border-radius: 4px; font-size: 8.5pt; text-decoration: line-through; display: inline-block; vertical-align: middle; }
+
+  .diff-box-add { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 10px 14px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 10pt; }
+  .diff-box-mod { background: #fefce8; border-left: 4px solid #eab308; padding: 10px 14px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 10pt; }
+  .diff-box-del { background: #fef2f2; border-left: 4px solid #ef4444; padding: 10px 14px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 10pt; }
+
+  /* Sections */
+  h2 { font-size: 17pt; color: #1a62ff; border-bottom: 2.5px solid #1a62ff; padding-bottom: 6px; margin: 28px 0 14px 0; page-break-after: avoid; }
+  h3 { font-size: 13pt; color: #0d52e6; margin: 20px 0 10px 0; page-break-after: avoid; }
+  h4 { font-size: 11.5pt; color: #374151; margin: 14px 0 6px 0; }
+  p { margin-bottom: 8px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 18px 0; font-size: 9.5pt; }
+  th { background: #1a62ff; color: white; padding: 8px 10px; text-align: left; font-weight: 600; }
+  td { padding: 7px 10px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  tr:nth-child(even) { background: #f9fafb; }
+  .field-table th:first-child { width: 160px; }
+  .field-table th:nth-child(2) { width: 150px; }
+
+  /* Info boxes */
+  .box { padding: 12px 16px; border-radius: 8px; margin: 12px 0; page-break-inside: avoid; }
+  .box-blue { background: #dbeafe; border-left: 4px solid #1a62ff; }
+  .box-green { background: #dcfce7; border-left: 4px solid #16a34a; }
+  .box-yellow { background: #fef3c7; border-left: 4px solid #d97706; }
+  .box-red { background: #fee2e2; border-left: 4px solid #dc2626; }
+  .box-gray { background: #f3f4f6; border-left: 4px solid #6b7280; }
+  .box .title { font-weight: 700; margin-bottom: 4px; }
+
+  /* Code */
+  code { background: #f3f4f6; padding: 2px 5px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 9.5pt; }
+  pre { background: #1f2937; color: #e5e7eb; padding: 12px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 9pt; margin: 10px 0; overflow-x: auto; white-space: pre-wrap; }
+
+  /* Step numbering */
+  .step { display: flex; gap: 14px; margin: 14px 0; page-break-inside: avoid; }
+  .step-num { min-width: 36px; height: 36px; background: #1a62ff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13pt; flex-shrink: 0; }
+  .step-content { flex: 1; }
+
+  /* Analogy */
+  .analogy { background: linear-gradient(135deg, #ede9fe, #dbeafe); padding: 14px 18px; border-radius: 8px; margin: 14px 0; page-break-inside: avoid; }
+  .analogy::before { content: '💡 Analogi: '; font-weight: 700; color: #7c3aed; }
+
+  /* Arrow flow */
+  .flow { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 16px 0; flex-wrap: wrap; }
+  .flow-item { background: #dbeafe; color: #1d4ed8; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 9.5pt; text-align: center; }
+  .flow-arrow { font-size: 16pt; color: #9ca3af; }
+  .flow-item.active { background: #1a62ff; color: white; }
+
+  /* Badge */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 8.5pt; font-weight: 600; }
+  .badge-owner { background: #dbeafe; color: #1d4ed8; }
+  .badge-cashier { background: #dcfce7; color: #166534; }
+  .badge-reseller { background: #fef3c7; color: #92400e; }
+  .badge-developer { background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; }
+  .badge-all { background: #f3f4f6; color: #374151; }
+
+  .page-break { page-break-before: always; }
+  .footer { text-align: center; color: #9ca3af; font-size: 8.5pt; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 10px; }
+  ul, ol { margin: 6px 0 10px 22px; }
+  li { margin-bottom: 3px; }
+
+  /* Screenshot Figures */
+  .screenshot-box {
+    margin: 14px 0 20px 0;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    page-break-inside: avoid;
+  }
+  .screenshot-box img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    display: block;
+    margin: 0 auto;
+  }
+  .screenshot-caption {
+    margin-top: 8px;
+    font-size: 9pt;
+    font-weight: 600;
+    color: #475569;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER ==================== -->
+<div class="cover">
+  <div class="logo">
+    <div style="display:inline-flex; width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg, #1a62ff, #0d5bff); color:white; align-items:center; justify-content:center; box-shadow:0 12px 24px -6px rgba(26,98,255,0.45); font-size:32pt;">📦</div>
+  </div>
+  <h1>Invo. POS & Inventory</h1>
+  <h2>Buku Panduan & Tutorial Penggunaan Lengkap</h2>
+  <div class="version-badge">Versi v1.5.0 — Invo. Modern SaaS Edition</div>
+  <p style="color:#6b7280; font-size: 11pt; max-width: 580px; margin: 0 auto 30px auto;">
+    Panduan lengkap operasional harian, alur rantai pasok FIFO, konfigurasi <em>Master Item & Multi-Satuan</em>, input transaksi backdate migrasi data, otomatisasi margin restock, panel developer, serta <strong>Desain Antarmuka Modern Invo. SaaS (Window Wrapper, Pill Navigation, & Executive 3-Row Dashboard)</strong>.
+  </p>
+  <div class="meta">
+    <p>Terakhir Diperbarui: 28 September 2026</p>
+    <p>Multi-Role: Owner • Kasir • Reseller • Developer</p>
+  </div>
+</div>
+
+<!-- ==================== TOC & CHANGELOG ==================== -->
+<div class="toc">
+  <h2>📑 Daftar Isi</h2>
+  <ul>
+    <li><span class="num">0</span> <strong>Riwayat Perubahan & Penanda Versi (Changelog v1.5.0)</strong></li>
+    <li><span class="num">1</span> Menjalankan Server & Cara Akses</li>
+    <li><span class="num">2</span> Login & Mengenal Dashboard (Invo. Design System)</li>
+    <li><span class="num">3</span> Memahami Alur Rantai Pasok (Supply Chain)</li>
+    <li><span class="num">4</span> Langkah 1 — Menambahkan Supplier</li>
+    <li><span class="num">5</span> Langkah 2 — Mencatat Pembelian (Restock & Auto Margin Sync)</li>
+    <li><span class="num">6</span> Langkah 3 — Setup Produk & Multi-Satuan (Single Flow)</li>
+    <li><span class="num">7</span> Langkah 4 — POS Checkout (Real-Time & Backdate)</li>
+    <li><span class="num">8</span> Langkah 5 — Konfirmasi Pembayaran</li>
+    <li><span class="num">9</span> Langkah 6 — Mencatat Pengeluaran Operasional</li>
+    <li><span class="num">10</span> Langkah 7 — Melihat Laporan Keuangan</li>
+    <li><span class="num">11</span> Role Khusus Developer — Panel Maintenance & Data Cleanup</li>
+    <li><span class="num">12</span> Hak Akses per Role</li>
+    <li><span class="num">13</span> Tips, Solusi Error & FAQ</li>
+  </ul>
+
+  <h2 style="margin-top: 30px;">📌 Riwayat Perubahan & Penanda Versi (v1.6.0)</h2>
+  <table>
+    <tr>
+      <th style="width:130px;">Versi</th>
+      <th style="width:130px;">Tipe Penanda</th>
+      <th>Ringkasan Perubahan</th>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>v1.6.0</strong><br><small>(Current)</small></td>
+      <td><span class="badge-add">[TAMBAH v1.6]</span></td>
+      <td>
+        • <strong>Dual-Mode Stok (Physical Allocation vs Floating Pool):</strong> Pilihan manajemen stok fleksibel. Mode Floating Pool untuk stok bebas otomatis (ideal untuk komoditas curah/telur), dan Physical Allocation (Repackage) untuk mengunci kuota kemasan fisik siap jual (Box, Lusin, PCS promo, atau paket sembako mendekati expired) dengan proteksi anti over-allocation & tombol reset bebas.<br>
+        • <strong>Composite Bundling / Hampers Buah (Model B - On-Demand JIT):</strong> Pembuatan paket parcel multi-item dari resep (Bill of Materials) dengan kalkulasi HPP gabungan dan estimasi kapasitas produksi otomatis berbasis bahan paling sedikit (bottleneck) tanpa merusak FIFO.
+      </td>
+    </tr>
+    <tr>
+      <td><span class="badge-mod">[UBAH v1.6]</span></td>
+      <td>
+        • <strong>Perbaikan Label Satuan Dinamis:</strong> Memperbaiki teks satuan pada katalog produk dan kartu kasir POS sehingga menampilkan nama satuan sebenarnya (Lusin, Box, Paket) secara akurat, bukan lagi tertulis 'pcs'.
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>v1.5.0</strong></td>
+      <td><span class="badge-add">[TAMBAH v1.5]</span></td>
+      <td>
+        • <strong>Invo. Modern SaaS UI Theme:</strong> Peremajaan visual antarmuka sistem secara komprehensif mengadopsi Invo Design System: Desktop window wrapper beraksen Mac 3-dots, logo kubus 3D geometris, navigasi kapsul pil menyala, dan header modern.<br>
+        • <strong>3-Row Executive Dashboard:</strong> Baris 1: 4 Stat cards pastel (Total Revenue, Invoices, Clients, Loyalty) ber-badge tren; Baris 2: Grafik batang pendapatan bulanan (interaktif rounded bars & dark active tooltip) + Kartu promosi royal blue; Baris 3: Aktivitas terkini & tabel nota invoice bersih.
+      </td>
+    </tr>
+    <tr>
+      <td><span class="badge-mod">[UBAH v1.5]</span></td>
+      <td>
+        • <strong>Peremajaan Halaman Login & Sub-Modul:</strong> Redesain formulir login beraksen Invo serta harmonisasi seluruh sub-halaman (POS Kasir, Produk, Pembelian, Laporan, Developer) ke palet Electric Blue (<code>#1a62ff</code>).
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>v1.4.0</strong></td>
+      <td><span class="badge-add">[TAMBAH v1.4]</span></td>
+      <td>
+        • <strong>Role Khusus Developer & 1 Menu Tunggal:</strong> Akun dengan peran Developer hanya melihat 1 menu saja (<em>Developer Maintenance</em>) dan diisolasi dari menu operasional toko.<br>
+        • <strong>Formulir Pembersihan Data Terfilter:</strong> Menyediakan opsi Wipe All Data atau seleksi form/modul (Transaksi POS, Pembelian, Biaya, Produk, Item, Supplier) dalam rentang tanggal tertentu.<br>
+        • <strong>Safety Protection:</strong> Konfirmasi ketik kata <code>DELETE</code> dan proteksi foreign key terbalik untuk menjaga keutuhan akun pengguna & sistem.
+      </td>
+    </tr>
+    <tr>
+      <td><span class="badge-mod">[UBAH v1.4]</span></td>
+      <td>
+        • <strong>Ekspansi RBAC & Skema Pengguna:</strong> Kolom role pada tabel <code>users</code> diperbarui dengan migration 002 untuk menyertakan role <code>developer</code>.
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>v1.3.0</strong></td>
+      <td><span class="badge-add">[TAMBAH v1.3]</span></td>
+      <td>
+        • <strong>Otomatisasi Harga Jual Berbasis Margin saat Restock:</strong> Pembelian perdana/berikutnya otomatis men-generate harga jual varian % margin tanpa distorsi riwayat penjualan lampau (frozen snapshot).
+      </td>
+    </tr>
+    <tr>
+      <td><span class="badge-mod">[UBAH v1.3]</span></td>
+      <td>
+        • <strong>Notifikasi Toast Informatif:</strong> Modal pembelian memberi rincian nama varian dan harga jual baru.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>v1.2.0</strong></td>
+      <td><span class="badge-add">[TAMBAH v1.2]</span></td>
+      <td>Input tanggal backdate POS, reset baris varian setup produk, normalisasi boundary tanggal laporan.</td>
+    </tr>
+    <tr>
+      <td><strong>v1.1.0</strong></td>
+      <td><span class="badge-add">[TAMBAH v1.1]</span></td>
+      <td>Master Items & Multi-Satuan eceran, form single-setup.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ==================== BAB 1: SERVER ==================== -->
+<h2>1. Menjalankan Server & Cara Akses</h2>
+
+<div class="analogy">
+  Bayangkan server seperti <strong>mesin kasir yang dinyalakan</strong> di pagi hari. Sebelum bisa dipakai bertransaksi, mesinnya harus dihidupkan dulu. Begitu juga aplikasi web ini — server harus berjalan agar bisa diakses dari browser.
+</div>
+
+<h3>1.1 Menyalakan Server</h3>
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-content"><strong>Masuk ke folder proyek:</strong> <code>cd D:\POS</code></div>
+</div>
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-content"><strong>Jalankan server:</strong> <code>npm start</code> (Akses: <code>http://localhost:3000</code>)</div>
+</div>
+
+<h3>1.2 Kredensial Login Bawaan (Default Accounts)</h3>
+<table>
+  <tr><th>Peran (Role)</th><th>Email Login</th><th>Password</th><th>Cakupan Akses</th></tr>
+  <tr><td><span class="badge badge-owner">Owner</span></td><td><code>admin@pos.com</code></td><td><code>admin123</code></td><td>Akses Penuh Seluruh Modul Toko</td></tr>
+  <tr><td><span class="badge badge-developer">Developer</span> 🟢 [v1.4]</td><td><code>developer@pos.com</code></td><td><code>developer123</code></td><td><strong>Hanya 1 Menu:</strong> Panel Maintenance & Reset Data Terfilter</td></tr>
+  <tr><td><span class="badge badge-cashier">Kasir</span></td><td>Dibuat oleh Owner</td><td>-</td><td>POS Kasir & Transaksi Backdate</td></tr>
+  <tr><td><span class="badge badge-reseller">Reseller</span></td><td>Dibuat oleh Owner</td><td>-</td><td>POS Penjualan (Katalog Eceran)</td></tr>
+</table>
+
+<!-- ==================== BAB 2: LOGIN & DASHBOARD ==================== -->
+<h2 class="page-break">2. Login & Mengenal Dashboard (Invo. Modern SaaS UI Theme) 🟢 [v1.5]</h2>
+<p>Buka browser, akses <code>http://localhost:3000</code>. Tampilan login kini hadir dengan branding <strong>Invo.</strong> dengan gaya SaaS modern, kartu putih berujung lengkung, dan tombol aksi Electric Blue. Masukkan email dan password terdaftar, lalu klik <strong>Masuk ke Sistem</strong>.</p>
+
+<div class="screenshot-box">
+  <img src="screenshots/01_login.png" alt="Formulir Login Invo POS">
+  <p class="screenshot-caption">📷 Gambar 2.1: Tampilan Formulir Login Sistem Invo. POS Modern SaaS</p>
+</div>
+
+<div class="box box-blue">
+  <div class="title">🌟 Mengenal Desain Antarmuka Baru (Invo. Design System)</div>
+  <p>Dashboard utama terbungkus dalam bingkai <strong>Desktop Window</strong> modern beraksen 3 tombol kontrol macOS (🔴 🟡 🟢). Setiap elemen dirancang clean, responsif, dan ergonomis untuk efisiensi operasional.</p>
+</div>
+
+<h3>2.1 Komponen Tata Letak Dashboard</h3>
+<table>
+  <tr><th style="width:160px;">Komponen</th><th style="width:140px;">Posisi</th><th>Deskripsi & Fungsi</th></tr>
+  <tr><td><strong>Logo & Branding Invo.</strong></td><td>Kiri Atas Sidebar</td><td>Logo kubus isometrik 3D gradasi biru dengan teks tebal <code>Invo.</code> sebagai identitas visual sistem.</td></tr>
+  <tr><td><strong>Navigasi Kapsul Pil</strong></td><td>Sidebar Kiri</td><td>Menu aktif disorot dengan kapsul pil biru elektrik menyala (*Electric Blue `#1a62ff` glow*), dengan <strong>seluruh teks label menu tetap dalam bahasa Indonesia orisinal</strong> (Dashboard, POS Kasir, Stok Barang, Riwayat Transaksi, Pembelian, Produk & Satuan, Supplier, Pengeluaran, Laporan, User Management, Pengaturan, Developer Maintenance) dan 100% beroperasi normal.</td></tr>
+  <tr><td><strong>Top Header Bar</strong></td><td>Atas Konten</td><td>Dilengkapi kotak pencarian instan (<em>Tap to search</em>), lonceng notifikasi dengan lencana unread <code>2</code>, dan avatar profil pengguna beserta penanda peran.</td></tr>
+  <tr><td><strong>Row 1: 4 Stat Cards</strong></td><td>Atas Dashboard</td><td>Menampilkan 4 metrik performa utama berikon pastel: Total Revenue (oranye), Invoices (hijau), Clients (biru), dan Loyalty (pink) lengkap dengan pill persentase tren naik/turun.</td></tr>
+  <tr><td><strong>Row 2: Grafik & Promo</strong></td><td>Tengah Dashboard</td><td><strong>Grafik Batang Vertikal Bulanan:</strong> Menampilkan tren omzet bulanan dengan rounded bars dan tooltip melayang hitam untuk bulan aktif.<br><strong>Invo Promo Card:</strong> Kartu aksi bergradasi royal blue dengan lencana <code>NEW</code> dan tombol jalan pintas cepat ke POS Kasir.</td></tr>
+  <tr><td><strong>Row 3: Aktivitas & Tabel</strong></td><td>Bawah Dashboard</td><td><strong>Recent Activities:</strong> Log aktivitas sistem terkini lengkap dengan avatar dan badge kategori.<br><strong>Recent Invoices:</strong> Tabel invoice rapi dengan status badge warna (PAID, PENDING, OVERDUE).</td></tr>
+</table>
+
+<div class="screenshot-box">
+  <img src="screenshots/02_dashboard.png" alt="Dashboard Eksekutif Invo POS">
+  <p class="screenshot-caption">📷 Gambar 2.2: Tampilan Dashboard Eksekutif Invo. (Stat Cards, Grafik Batang Pendapatan, Promo Banner, & Invoices)</p>
+</div>
+
+<div class="analogy">
+  Sistem kasir Anda kini memiliki visual modern layaknya software ERP enterprise global. Tampilan yang bersih membantu staf kasir dan pemilik toko fokus pada angka metrik penting tanpa distraksi visual.
+</div>
+
+<!-- ==================== BAB 3: ALUR SUPPLY CHAIN ==================== -->
+<h2 class="page-break">3. Memahami Alur Rantai Pasok</h2>
+
+<div class="analogy">
+  Bayangkan Anda memiliki <strong>toko sprei & konveksi</strong>. Anda membeli bahan baku kain dalam satuan grosir besar seperti <strong>Kodi</strong> atau <strong>Roll</strong> dari pemasok. Di toko, bahan tersebut dipotong-potong menjadi berbagai ukuran sprei: <strong>Sprei M, Sprei L, dan Sprei XL</strong>. Sistem ini melacak seluruh siklus persediaan dari meteran kain utuh hingga terjual eceran.
+</div>
+
+<div class="flow">
+  <div class="flow-item">1️⃣ Supplier</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">2️⃣ Pembelian<br><small>(Kodi / Roll)</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">3️⃣ Master Item & Multi-Satuan<br><small>(Meter ➔ Sprei M/L/XL)</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item active">4️⃣ POS Kasir<br><small>(Real-time / Backdate)</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">5️⃣ Laporan<br><small>(Laba Rugi)</small></div>
+</div>
+
+<!-- ==================== BAB 4: SUPPLIER ==================== -->
+<h2>4. Langkah 1 — Menambahkan Supplier</h2>
+<p><span class="badge badge-owner">OWNER ONLY</span> &nbsp; <strong>Menu:</strong> Sidebar → 🤝 Supplier → klik <strong>➕ Tambah Supplier</strong></p>
+<table class="field-table">
+  <tr><th>Field</th><th>Contoh</th><th>Penjelasan</th></tr>
+  <tr><td><strong>Nama Supplier</strong> <span style="color:red">*</span></td><td><code>Toko Kain Makmur</code></td><td>Nama perusahaan/toko pemasok barang.</td></tr>
+  <tr><td><strong>Telepon</strong></td><td><code>08123456789</code></td><td>Nomor kontak pemesanan ulang.</td></tr>
+  <tr><td><strong>Alamat</strong></td><td><code>Jl. Tekstil No. 1, Bandung</code></td><td>Alamat gudang/kantor supplier.</td></tr>
+</table>
+
+<div class="screenshot-box">
+  <img src="screenshots/03_supplier_form.png" alt="Formulir Modal Tambah Supplier">
+  <p class="screenshot-caption">📷 Gambar 4.1: Formulir Modal Tambah Data Mitra Supplier Baru</p>
+</div>
+
+<!-- ==================== BAB 5: PEMBELIAN ==================== -->
+<h2 class="page-break">5. Langkah 2 — Mencatat Pembelian (Restock & Auto Margin Sync)</h2>
+<p><span class="badge badge-owner">OWNER ONLY</span> &nbsp; <strong>Menu:</strong> Sidebar → 🚚 Pembelian / Restock → klik <strong>➕ Pembelian Baru</strong></p>
+
+<div class="diff-box-add">
+  <strong>🟢 [TAMBAH v1.3] Otomatisasi Penentuan Harga Jual Berbasis Margin (% Margin Sync):</strong><br>
+  Ketika Anda menyetel barang dengan metode <code>% Margin Profit</code> pada saat barang baru dibuat (di mana HPP awal masih Rp 0 sehingga harga jual awal Rp 0), Anda <strong>tidak perlu lagi mengedit harga secara manual</strong> setelah membeli barang! Setiap kali pembelian dicatat, sistem seketika menghitung HPP modal rata-rata tertimbang batch yang ada di gudang dan otomatis men-generate harga jualnya.<br>
+  <strong>🔒 Proteksi Penjualan Historis:</strong> Jika kelak harga modal beli naik dan harga katalog diperbarui otomatis oleh restock baru, nota-nota penjualan kasir di masa lalu <strong>100% aman dan tidak ikut terubah</strong> karena sistem mengunci snapshot harga per transaksi.
+</div>
+
+<div class="analogy">
+  <strong>Contoh Kasus Riil (Kacamata):</strong><br>
+  1. Anda membuat master barang <strong>"Kacamata"</strong> (satuan dasar <code>PCS</code>) dan satuan jual <strong>"Kacamata Hitam"</strong> dengan Margin <strong>50%</strong>. Awalnya harga jual tertera <strong>Rp 0</strong> karena belum pernah kulakan.<br>
+  2. Anda mencatat Pembelian perdana: <strong>10 PCS @ Rp 100.000</strong>.<br>
+  3. Sistem langsung men-generate harga jual <strong>"Kacamata Hitam"</strong> menjadi <strong>Rp 150.000</strong> (Modal Rp 100.000 + Laba 50%) tanpa perlu Anda ketik ulang!<br>
+  4. Kasir menjual 1 unit seharga Rp 150.000. Besoknya Anda kulakan lagi dengan harga modal naik Rp 200.000. Harga jual katalog otomatis naik menyesuaikan rata-rata modal baru, tetapi nota kasir kemarin tetap tercatat Rp 150.000 (tidak ada distorsi laporan).
+</div>
+
+<table class="field-table">
+  <tr><th>Field Form</th><th>Contoh</th><th>Penjelasan Detail</th></tr>
+  <tr><td><strong>Supplier</strong> <span style="color:red">*</span></td><td><code>Toko Kain Makmur</code></td><td>Pilih pemasok barang dari dropdown.</td></tr>
+  <tr><td><strong>Tanggal Pembelian</strong> <span style="color:red">*</span></td><td><code>2026-09-27</code></td><td>Tanggal barang diterima (menentukan urutan pemotongan FIFO). Bisa diisi tanggal lampau untuk migrasi data!</td></tr>
+  <tr><td><strong>Nama Barang</strong> <span style="color:red">*</span></td><td><code>XXX</code> atau <code>Kacamata</code></td><td>Nama barang master. Terdapat saran otomatis dari barang master terdaftar.</td></tr>
+  <tr><td><strong>Jumlah Satuan Beli</strong> <span style="color:red">*</span></td><td><code>1</code> (Kodi) atau <code>10</code> (PCS)</td><td>Jumlah satuan grosir atau eceran yang dibeli.</td></tr>
+  <tr><td><strong>Harga Beli per Satuan</strong> <span style="color:red">*</span></td><td><code>1200000</code></td><td>Harga per Kodi/Roll/PCS (misal: Rp 1.200.000).</td></tr>
+  <tr><td><strong>Konversi ke Satuan Dasar</strong> <span style="color:red">*</span></td><td><code>60</code> (jika Kodi/Meter) atau <code>1</code> (jika PCS)</td><td>Berapa satuan dasar dalam 1 satuan beli (misal: 60 meter per kodi, atau 1 untuk pcs).</td></tr>
+</table>
+
+<div class="box box-blue">
+  <div class="title">🔢 Hasil Perhitungan Otomatis Sistem:</div>
+  Total Biaya Beli = Rp 1.200.000 | Total Stok Masuk = <strong>60 Meter</strong> | <strong>HPP Dasar</strong> = <strong>Rp 20.000 / Meter</strong>. Seluruh varian margin profit langsung disinkronkan ke harga jual terbaru!
+</div>
+
+<div class="screenshot-box">
+  <img src="screenshots/04_purchase_form.png" alt="Formulir Modal Pembelian Restock">
+  <p class="screenshot-caption">📷 Gambar 5.1: Formulir Modal Pembelian Restock (Konversi Grosir ke Satuan Dasar FIFO & Auto Margin Sync)</p>
+</div>
+
+<!-- ==================== BAB 6: PRODUK MULTI-SATUAN ==================== -->
+<h2 class="page-break">6. Langkah 3 — Setup Produk & Multi-Satuan (Single Flow)</h2>
+<p><span class="badge badge-owner">OWNER ONLY</span> &nbsp; <strong>Menu:</strong> Sidebar → 🎯 Produk & Satuan → klik <strong>➕ Setup Produk & Multi-Satuan</strong></p>
+
+<div class="diff-box-mod">
+  <strong>🟡 [UBAH v1.2 & v1.3] Reset Bersih & Fleksibilitas Margin Tanpa Restock:</strong><br>
+  Setiap kali formulir dibuka, baris satuan jual <strong>selalu di-reset bersih</strong>. Header kolom kebutuhan stok otomatis mengikuti teks pada kotak <em>Satuan Dasar Perhitungan Stok</em>. Jika Anda memilih metode <code>% Margin Profit</code> pada barang yang belum ada riwayat pembelian, harga jual awal akan bernilai Rp 0 — Anda tidak perlu ragu, karena begitu pembelian dicatat di Langkah 2, harga jual akan otomatis aktif terhitung.
+</div>
+
+<h3>Teks Panduan Resmi pada Formulir:</h3>
+<p style="background:#f3f4f6; padding:10px 14px; border-radius:6px; font-style:italic; border-left:3px solid #2563eb;">
+  "Tentukan ukuran pecahan eceran anda (misal: satuan jual 1 Sprei M butuh 2.0 Satuan Dasar Perhitungan Stok (sebagai contoh : meter) dan  Sprei L butuh 2.5 Satuan Dasar Perhitungan Stok (sebagai contoh : meter). Sistem akan menghitung HPP otomatis berdasarkan harga modal per meter di gudang."
+</p>
+
+<h4>Tabel Konfigurasi Satuan Jual Dinamis:</h4>
+<table>
+  <thead>
+    <tr>
+      <th>Satuan Jual</th>
+      <th>Kebutuhan (<span class="lblBaseUnit">Meter</span>) 🟢 [v1.2]</th>
+      <th>Metode Harga</th>
+      <th>Nilai / Margin</th>
+      <th>Kalkulasi HPP</th>
+      <th>Harga Jual Akhir</th>
+      <th>Estimasi Profit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Sprei M</strong></td>
+      <td><code>2.0</code> Meter</td>
+      <td><span class="badge badge-info">Manual</span></td>
+      <td>-</td>
+      <td>Rp 40.000</td>
+      <td><strong>Rp 60.000</strong></td>
+      <td><span style="color:#16a34a;font-weight:600">Rp 20.000 (+50%)</span></td>
+    </tr>
+    <tr>
+      <td><strong>Sprei L</strong></td>
+      <td><code>2.5</code> Meter</td>
+      <td><span class="badge badge-warning">% Margin Profit</span></td>
+      <td><code>40%</code></td>
+      <td>Rp 50.000</td>
+      <td><strong>Rp 70.000</strong></td>
+      <td><span style="color:#16a34a;font-weight:600">Rp 20.000 (+40%)</span></td>
+    </tr>
+    <tr>
+      <td><strong>Sprei XL</strong></td>
+      <td><code>3.0</code> Meter</td>
+      <td><span class="badge badge-warning">% Margin Profit</span></td>
+      <td><code>50%</code></td>
+      <td>Rp 60.000</td>
+      <td><strong>Rp 90.000</strong></td>
+      <td><span style="color:#16a34a;font-weight:600">Rp 30.000 (+50%)</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="box box-green">
+  <div class="title">✅ Stok Siap Jual Otomatis Terhitung:</div>
+  Sprei M = <strong>30 pcs</strong> (60/2.0) | Sprei L = <strong>24 pcs</strong> (60/2.5) | Sprei XL = <strong>20 pcs</strong> (60/3.0).
+</div>
+
+<div class="screenshot-box">
+  <img src="screenshots/05_products_setup.png" alt="Formulir Setup Multi-Satuan Produk">
+  <p class="screenshot-caption">📷 Gambar 6.1: Formulir Setup Multi-Satuan Master Item (Varian Sprei M/L/XL dengan Margin & Manual Pricing)</p>
+</div>
+
+<!-- ==================== SUB-BAB 6.2: DUAL-MODE STOK ==================== -->
+<h3>6.2 Manajemen Stok Fleksibel: Floating Pool vs Physical Allocation 🟢 [NEW v1.6.0]</h3>
+<p>
+  Di kondisi pasar nyata, dinamika persaingan harga dan karakteristik barang menuntut fleksibilitas pengelolaan stok. Sistem menyediakan 2 model pengelolaan stok siap jual:
+</p>
+
+<div class="step">
+  <div class="step-num">A</div>
+  <div class="step-content">
+    <h4>Model Floating Pool (Stok Bebas & Konversi Otomatis)</h4>
+    <p>Cocok untuk barang curah/segar seperti telur, beras, kain meteran, atau buah-buahan.</p>
+    <div class="analogy">
+      <strong>Sample Case:</strong> Gudang memiliki <strong>449 PCS</strong> Kacamata. Satuan jual terdiri dari PCS (1 PCS), Lusin (12 PCS), dan Box (50 PCS). Di layar kasir, stok otomatis tampil: <strong>449 PCS</strong>, <strong>37 Lusin</strong> (449/12), dan <strong>8 Box</strong> (449/50). Saat pembeli membeli 1 Lusin (12 PCS), kasir mengambil 12 PCS dari tumpukan gudang. Sisa stok gudang menjadi <strong>437 PCS</strong>, dan seketika pilihan di kasir ter-update menjadi: 437 PCS, 36 Lusin, dan 8 Box tanpa ada stok yang terkunci sia-sia.
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">B</div>
+  <div class="step-content">
+    <h4>Model Physical Allocation (Repackage / Alokasi Kuota Fisik)</h4>
+    <p>Cocok untuk barang yang sudah dibungkus fisik di rak toko, paket sembako, atau barang yang mendekati expired.</p>
+    <div class="analogy">
+      <strong>Sample Case:</strong> Dari total <strong>449 PCS</strong>, pemilik memutuskan membungkus fisik menjadi <strong>5 Box</strong> (250 PCS), <strong>15 Lusin</strong> (180 PCS), dan <strong>19 PCS</strong> Eceran (total 449 PCS). Di kasir, stok hanya melayani sesuai kuota yang dialokasikan. Jika ada pembeli eceran ingin membeli 25 PCS, kasir hanya bisa menjual 19 PCS eceran karena 15 Lusin lainnya sudah terikat rapi dalam kemasan lusinan di rak display.
+    </div>
+  </div>
+</div>
+
+<h4>🔄 Kapan Pemilik Usaha Melakukan Switching Mode?</h4>
+<table>
+  <thead>
+    <tr>
+      <th style="width:220px;">Arah Switching</th>
+      <th>Kondisi Pasar / Operasional</th>
+      <th style="width:240px;">Aksi di Sistem</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Floating Pool ➔ Physical Allocation</strong></td>
+      <td>
+        1. <strong>Barang Mendekati Expired:</strong> Sarden/tepung yang sisa 2 bulan dipaketkan ke kuota khusus agar cepat habis.<br>
+        2. <strong>Perang Harga Pasar:</strong> Mengemas 20 lusin paket hemat diskon untuk mengamankan perputaran modal.<br>
+        3. <strong>Kesiapan Display:</strong> Membungkus barang di pagi hari agar jam sibuk tidak terjadi antrean packing.
+      </td>
+      <td>Klik tombol <code>📦 Repackage / Alokasi Stok</code> pada kartu barang, masukkan kuota fisik tiap satuan, lalu klik <code>💾 Simpan Alokasi Stok</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Physical Allocation ➔ Floating Pool</strong></td>
+      <td>
+        1. <strong>Tren Pasar Berbalik:</strong> Peminat grosir/paket sepi sementara pembeli eceran melonjak tinggi.<br>
+        2. <strong>Promo Berakhir:</strong> Kemasan sisa promo dibuka kembali menjadi stok bebas.
+      </td>
+      <td>Buka modal Repackage dan klik tombol merah <code>🌊 Reset ke Floating Pool</code>. Stok seketika kembali bebas dikonversi ke semua satuan tanpa mengubah HPP FIFO.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="screenshot-box">
+  <img src="screenshots/modal_repackage.png" alt="Modal Repackage Alokasi Stok Fisik">
+  <p class="screenshot-caption">📷 Gambar 6.2: Modal Repackage dengan Live Calculator Bar (Total Gudang, Total Teralokasi, Sisa Bebas) & Validasi Anti Over-Allocation</p>
+</div>
+
+<!-- ==================== SUB-BAB 6.3: COMPOSITE BUNDLING ==================== -->
+<h3>6.3 Paket Hampers / Bundling Multi-Item & Kaitannya dengan Stok 🟢 [NEW v1.6.0]</h3>
+<p>
+  Untuk paket komposit seperti <strong>Hampers Parcel Buah</strong> (1.5 kg Mangga + 1.0 kg Apel + 0.5 kg Anggur + 1 Keranjang):
+</p>
+<ul>
+  <li><strong>Mengapa Model B (On-Demand JIT)?</strong> Buah segar akan cepat busuk jika dikemas ke dalam parcel berhari-hari sebelum laku. Oleh karena itu, komponen buah tetap berada di gudang dalam mode <em>Floating Pool</em>.</li>
+  <li><strong>Kalkulasi Bottleneck:</strong> Sistem otomatis menghitung berapa banyak paket hampers yang bisa dirakit hari ini berdasarkan stok buah yang paling sedikit.</li>
+  <li><strong>Sinkronisasi dengan Physical Allocation:</strong> Jika ada stok buah tertentu yang sudah sangat matang dan wajib dihabiskan hari itu, pemilik dapat mengalokasikannya ke kuota parcel spesial hari ini agar kasir memprioritaskan penjualan parcel tersebut.</li>
+  <li><strong>Pemotongan FIFO & HPP Gabungan:</strong> Saat kasir menjual 1 Paket Hampers, sistem otomatis memotong stok komponen per batch FIFO, menghitung total HPP gabungan secara tepat, dan menjaga akurasi laporan Laba Rugi (P&L).</li>
+</ul>
+
+<div class="screenshot-box">
+  <img src="screenshots/modal_bundle.png" alt="Modal Setup Paket Hampers Bundling">
+  <p class="screenshot-caption">📷 Gambar 6.3: Formulir Setup Paket Hampers / Bundling dengan Deteksi Kapasitas Bottleneck Otomatis</p>
+</div>
+
+<!-- ==================== BAB 7: POS CHECKOUT & BACKDATE ==================== -->
+<h2 class="page-break">7. Langkah 4 — POS Checkout (Real-Time & Backdate)</h2>
+<p><span class="badge badge-all">SEMUA ROLE</span> &nbsp; <strong>Menu:</strong> Sidebar → 🛒 POS Kasir</p>
+
+<div class="diff-box-add">
+  <strong>🟢 [TAMBAH v1.2] Fitur Input Tanggal Transaksi (Backdate untuk Migrasi Data):</strong><br>
+  Saat toko pertama kali menggunakan sistem (*go-live*), pemilik usaha sering kali harus memasukkan nota penjualan lama. Pada panel pembayaran keranjang kasir, kini terdapat field <strong>📅 Tanggal Transaksi</strong>. Anda dapat memilih tanggal dan jam di masa lampau untuk mencatat transaksi historis. Tersedia tombol <strong>"Sekarang"</strong> untuk mengembalikan ke waktu saat ini.
+</div>
+
+<h3>Langkah Checkout & Penggunaan Tanggal Backdate:</h3>
+<ol>
+  <li><strong>Pilih Produk:</strong> Klik produk di katalog untuk masuk ke keranjang (misal: <em>XXX - Sprei L</em>).</li>
+  <li><strong>Atur Kuantitas:</strong> Ketikkan langsung angka jumlah beli di keranjang (contoh: <code>2</code> pcs).</li>
+  <li><strong>Pilih Tanggal Transaksi:</strong>
+    <ul>
+      <li>Untuk penjualan hari ini: Biarkan terisi waktu sekarang.</li>
+      <li>Untuk migrasi data lama: Ubah field <strong>Tanggal Transaksi</strong> ke tanggal transaksi yang tertera pada nota fisik (contoh: <code>15 Agustus 2026 14:30</code>).</li>
+    </ul>
+  </li>
+  <li><strong>Pilih Metode Pembayaran & Input Uang:</strong> Pilih <strong>CASH</strong>, <strong>TRANSFER</strong>, atau <strong>QRIS</strong>.</li>
+  <li><strong>Klik 💳 Bayar:</strong> Transaksi tersimpan pada tanggal historis tersebut dan stok gudang terpotong secara FIFO.</li>
+</ol>
+
+<div class="screenshot-box">
+  <img src="screenshots/06_pos_checkout.png" alt="Antarmuka POS Kasir & Transaksi Backdate">
+  <p class="screenshot-caption">📷 Gambar 7.1: Antarmuka POS Kasir dengan Field Input Tanggal Backdate & Keranjang Belanja</p>
+</div>
+
+<div class="screenshot-box">
+  <img src="screenshots/pos_view.png" alt="Tampilan POS Kasir Multi-Satuan dan Paket Bundle">
+  <p class="screenshot-caption">📷 Gambar 7.2: Tampilan Kasir POS dengan Label Satuan Akurat (PCS, Lusin, Box) dan Indikator Badge BUNDLE / ALOKASI</p>
+</div>
+
+<div class="box box-blue">
+  <div class="title">🔄 Simulasi Penjualan Backdate 15 Agustus:</div>
+  Penjualan 2 pcs Sprei L (@ Rp 70.000 = Rp 140.000):
+  <ul>
+    <li>Stok kain gudang terpotong: $2 \times 2.5\text{ m} = \mathbf{5.0\text{ Meter}}$.</li>
+    <li>Sisa stok gudang terkini: $60 - 5 = \mathbf{55.0\text{ Meter}}$.</li>
+    <li>Transaksi tercatat di buku tanggal 15 Agustus 2026. Laporan penjualan dan laba rugi bulan Agustus otomatis memuat transaksi ini!</li>
+  </ul>
+</div>
+
+<div class="screenshot-box">
+  <img src="screenshots/07_transactions.png" alt="Daftar Riwayat Transaksi Penjualan">
+  <p class="screenshot-caption">📷 Gambar 7.3: Daftar Riwayat Transaksi Penjualan & Status Pembayaran Kasir</p>
+</div>
+
+<!-- ==================== BAB 8: PENGELUARAN & LAPORAN ==================== -->
+<h2 class="page-break">8. Langkah 7 — Pengeluaran & Melihat Laporan Keuangan</h2>
+
+<h3>8.1 Pencatatan Pengeluaran</h3>
+<p><span class="badge badge-owner">OWNER ONLY</span> &nbsp; <strong>Menu:</strong> Sidebar → 💰 Pengeluaran</p>
+<p>Catat biaya operasional toko seperti sewa, listrik, dan gaji. Tanggal pengeluaran juga mendukung backdate agar sesuai dengan pembukuan bulan terkait.</p>
+
+<div class="screenshot-box">
+  <img src="screenshots/08_expenses_form.png" alt="Formulir Modal Catat Pengeluaran">
+  <p class="screenshot-caption">📷 Gambar 8.1: Formulir Modal Pencatatan Biaya Pengeluaran Operasional Toko</p>
+</div>
+
+<h3>8.2 Membaca Laporan Keuangan (Laba Rugi)</h3>
+<p><span class="badge badge-owner">OWNER ONLY</span> &nbsp; <strong>Menu:</strong> Sidebar → 📈 Laporan → Tab <strong>💰 Laba Rugi</strong></p>
+
+<div class="diff-box-add">
+  <strong>🟢 [TAMBAH v1.2] Normalisasi Rentang Filter Laporan:</strong><br>
+  Laporan kini secara otomatis menyertakan seluruh transaksi dari pukul 00:00:00 pada tanggal awal hingga 23:59:59 pada tanggal akhir, sehingga semua transaksi backdate maupun transaksi hari ini terekam dengan akurat tanpa terlewat.
+</div>
+
+<table>
+  <tr><th>Komponen Laporan</th><th>Rumus Perhitungan</th><th>Penjelasan</th></tr>
+  <tr><td><strong>Total Omzet (Revenue)</strong></td><td>Total nilai transaksi lunas</td><td>Pendapatan kotor dari penjualan produk.</td></tr>
+  <tr><td><strong>Total HPP (COGS FIFO)</strong></td><td>Akumulasi modal bahan dasar yang terpotong</td><td>Dihitung otomatis dari batch FIFO tertua.</td></tr>
+  <tr><td><strong>Laba Kotor (Gross Profit)</strong></td><td>$\text{Omzet} - \text{Total HPP}$</td><td>Keuntungan sebelum dipotong biaya operasional.</td></tr>
+  <tr><td><strong>Biaya Operasional</strong></td><td>Akumulasi pengeluaran operasional toko</td><td>Beban listrik, sewa, gaji, perlengkapan.</td></tr>
+  <tr><td><strong>Laba Bersih (Net Profit)</strong></td><td>$\text{Laba Kotor} - \text{Biaya Operasional}$</td><td>Keuntungan bersih riil usaha Anda.</td></tr>
+</table>
+
+<div class="screenshot-box">
+  <img src="screenshots/09_reports.png" alt="Laporan Laba Rugi Otomatis">
+  <p class="screenshot-caption">📷 Gambar 8.2: Tampilan Laporan Laba Rugi Otomatis (Gross Profit FIFO & Net Profit Toko)</p>
+</div>
+
+<!-- ==================== BAB 9: DEVELOPER PANEL ==================== -->
+<h2 class="page-break">9. Role Khusus Developer — Panel Maintenance & Data Cleanup</h2>
+<p><span class="badge badge-developer">DEVELOPER ONLY</span> &nbsp; <strong>Menu:</strong> Sidebar → 🛠️ Developer Maintenance</p>
+
+<div class="diff-box-add">
+  <strong>🟢 [TAMBAH v1.4] Tampilan Eksklusif & Isolasi Menu Role Developer:</strong><br>
+  Ketika Anda login menggunakan akun Developer (<code>developer@pos.com</code> / <code>developer123</code>), sidebar <strong>hanya menampilkan 1 menu tunggal</strong>, yaitu <em>Developer Maintenance</em>. Seluruh menu operasional toko (Kasir, Pembelian, Stok, Laporan, Supplier, Settings) disembunyikan total. Usaha mengakses halaman kasir atau laporan akan otomatis dikembalikan ke panel developer ini.
+</div>
+
+<div class="analogy">
+  Bayangkan akun Developer seperti <strong>teknisi instalasi listrik</strong> yang memiliki kunci panel meteran khusus. Teknisi tidak perlu melayani pembeli di kasir atau menghitung nota, melainkan fokus menjaga instalasi, membersihkan sisa kabel uji coba (*data testing*), atau mereset data tertentu saat diminta pemilik toko.
+</div>
+
+<h3>Fitur Formulir Pembersihan & Reset Data:</h3>
+<ol>
+  <li>
+    <strong>Kartu Status Data Real-time:</strong>
+    Menampilkan ringkasan jumlah baris data yang ada di database saat ini (Transaksi, Pembelian, Pengeluaran, Varian Produk, Master Barang, Supplier) beserta rentang tanggal transaksi pertama hingga terakhir.
+  </li>
+  <li>
+    <strong>Opsi 1 — Pilihan Form / Modul Spesifik & Periode Tanggal:</strong>
+    Memungkinkan Developer memilih satu atau beberapa modul yang ingin dihapus (misalnya: hanya mencentang <em>Transaksi Penjualan</em> dan <em>Pengeluaran</em>) dan menentukan tanggal awal serta tanggal akhir. Data di luar tanggal tersebut tetap aman.
+  </li>
+  <li>
+    <strong>Opsi 2 — Hapus SEMUA Data (Wipe All Data):</strong>
+    Mengosongkan seluruh data operasional toko (transaksi, inventori, pembelian, katalog, barang master, dan supplier). Akun pengguna sistem (Owner dan Developer) tetap aman dan tidak ikut terhapus.
+  </li>
+  <li>
+    <strong>Konfirmasi Keamanan Ganda (Safety Protection):</strong>
+    Karena aksi penghapusan permanen, pengguna wajib mengetikkan kata <code>DELETE</code> pada kotak verifikasi sebelum tombol eksekusi dapat diproses.
+  </li>
+</ol>
+
+<div class="screenshot-box">
+  <img src="screenshots/10_developer_panel.png" alt="Panel Maintenance & Reset Data Role Developer">
+  <p class="screenshot-caption">📷 Gambar 9.1: Panel Khusus Role Developer (Statistik Entitas & Formulir Filtered Cleanup Rentang Tanggal)</p>
+</div>
+
+<!-- ==================== BAB 10: MATRIKS & FAQ ==================== -->
+<h2 class="page-break">10. Ringkasan Hak Akses & FAQ</h2>
+
+<h3>10.1 Matriks Hak Akses Pengguna (Multi-Role)</h3>
+<table>
+  <tr>
+    <th>Fitur / Modul</th>
+    <th><span class="badge badge-owner">Owner</span></th>
+    <th><span class="badge badge-cashier">Kasir</span></th>
+    <th><span class="badge badge-reseller">Reseller</span></th>
+    <th><span class="badge badge-developer">Developer</span> 🟢 [v1.4]</th>
+  </tr>
+  <tr><td>Dashboard Eksekutif</td><td>✅ Lengkap</td><td>✅ Ringkas</td><td>✅ Ringkas</td><td>❌ (Diisolasi)</td></tr>
+  <tr><td>POS Kasir & Transaksi Backdate</td><td>✅</td><td>✅</td><td>✅ (Katalog Terfilter)</td><td>❌</td></tr>
+  <tr><td>Setup Multi-Satuan Produk</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+  <tr><td>Pembelian Restock Bahan</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+  <tr><td>Konfirmasi Bayar Transfer/QRIS</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+  <tr><td>Laporan Keuangan & Laba Rugi</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+  <tr><td>User Management & Pengaturan</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+  <tr><td><strong>Panel Maintenance & Reset Data</strong></td><td>❌</td><td>❌</td><td>❌</td><td>✅ <strong>(Akses Tunggal Eksklusif)</strong></td></tr>
+</table>
+
+<h3>10.2 Pertanyaan yang Sering Diajukan (FAQ)</h3>
+
+<div class="box box-yellow">
+  <div class="title">Q: Jika Developer memilih "Hapus SEMUA Data", apakah akun login Admin dan Developer ikut terhapus?</div>
+  <p><strong>A:</strong> Tidak. Skema penghapusan <code>mode: all</code> dirancang khusus untuk mengosongkan data transaksi, persediaan, dan katalog produk. Tabel pengguna (<code>users</code>) dan pengaturan sistem (<code>system_settings</code>) tetap utuh sehingga pengguna tetap bisa langsung login kembali.</p>
+</div>
+
+<div class="box box-blue">
+  <div class="title">Q: Mengapa transaksi backdate penting saat migrasi data awal?</div>
+  <p><strong>A:</strong> Saat toko baru mulai memakai sistem di pertengahan bulan, pemilik usaha ingin laporan bulanan tetap utuh. Dengan fitur backdate di pembelian dan kasir, data penjualan minggu-minggu sebelumnya bisa diinput ke sistem dengan tanggal aslinya, sehingga laporan keuangan di akhir bulan mencerminkan performa nyata.</p>
+</div>
+
+<div class="footer">
+  <p>📖 Buku Panduan & Tutorial Sistem POS v1.5.0 • Multi-Role, Invo SaaS UI, FIFO Backdate & Developer Maintenance</p>
+  <p>Dokumentasi Resmi Terintegrasi • 28 September 2026</p>
+</div>
+
+</body>
+</html>

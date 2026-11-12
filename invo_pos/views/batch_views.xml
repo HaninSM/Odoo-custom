@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Batch Tree View -->
+    <record id="view_x_pos_batch_tree" model="ir.ui.view">
+        <field name="name">x_pos_batch.tree</field>
+        <field name="model">x_pos_batch</field>
+        <field name="arch" type="xml">
+            <list string="Batch Persediaan FIFO" create="false" edit="false">
+                <field name="x_item_id"/>
+                <field name="x_purchase_id"/>
+                <field name="x_received_date"/>
+                <field name="x_initial_quantity" string="Stok Awal"/>
+                <field name="x_remaining_quantity" string="Sisa Stok"/>
+                <field name="x_base_unit" string="Satuan Dasar"/>
+                <field name="x_base_cost_price" widget="monetary" string="HPP Modal Dasar"/>
+                <field name="x_state" widget="badge" decoration-success="x_state == 'active'" decoration-danger="x_state == 'depleted'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Batch Search View -->
+    <record id="view_x_pos_batch_search" model="ir.ui.view">
+        <field name="name">x_pos_batch.search</field>
+        <field name="model">x_pos_batch</field>
+        <field name="arch" type="xml">
+            <search string="Cari Batch Persediaan">
+                <field name="x_item_id"/>
+                <field name="x_purchase_id"/>
+                <filter string="Stok Masih Ada" name="filter_active" domain="[('x_remaining_quantity', '&gt;', 0)]"/>
+                <filter string="Stok Habis" name="filter_depleted" domain="[('x_remaining_quantity', '&lt;=', 0)]"/>
+                <group expand="0" string="Kelompokkan Berdasarkan">
+                    <filter string="Barang Induk" name="group_by_item" context="{'group_by': 'x_item_id'}"/>
+                    <filter string="Tanggal Masuk" name="group_by_date" context="{'group_by': 'x_received_date'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'x_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Batch Action Window -->
+    <record id="action_x_pos_batch" model="ir.actions.act_window">
+        <field name="name">Kartu Batch Stok FIFO</field>
+        <field name="res_model">x_pos_batch</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_x_pos_batch_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+</odoo>

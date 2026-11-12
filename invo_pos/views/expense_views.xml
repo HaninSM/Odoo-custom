@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Expense Tree / List View -->
+    <record id="view_x_pos_expense_tree" model="ir.ui.view">
+        <field name="name">x_pos_expense.tree</field>
+        <field name="model">x_pos_expense</field>
+        <field name="arch" type="xml">
+            <list string="Beban Biaya Operasional">
+                <field name="x_name"/>
+                <field name="x_date"/>
+                <field name="x_category"/>
+                <field name="x_amount" widget="monetary" sum="Total Pengeluaran"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Expense Form View -->
+    <record id="view_x_pos_expense_form" model="ir.ui.view">
+        <field name="name">x_pos_expense.form</field>
+        <field name="model">x_pos_expense</field>
+        <field name="arch" type="xml">
+            <form string="Beban Biaya Operasional">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="x_name" string="Keterangan Pengeluaran"/>
+                        <h1>
+                            <field name="x_name" placeholder="Misal: Plastik Packing Sprei, Token Listrik Toko"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Kategori &amp; Tanggal">
+                            <field name="x_category"/>
+                            <field name="x_date"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Nominal Pengeluaran">
+                            <field name="x_amount" widget="monetary" class="fw-bold fs-3 text-danger"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Catatan &amp; Rincian Tambahan" name="notes">
+                            <field name="x_notes" placeholder="Catatan kuitansi, penerima kas, dsb."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Expense Search View -->
+    <record id="view_x_pos_expense_search" model="ir.ui.view">
+        <field name="name">x_pos_expense.search</field>
+        <field name="model">x_pos_expense</field>
+        <field name="arch" type="xml">
+            <search string="Cari Beban Pengeluaran">
+                <field name="x_name"/>
+                <field name="x_category"/>
+                <group expand="0" string="Kelompokkan Berdasarkan">
+                    <filter string="Kategori Beban" name="group_by_category" context="{'group_by': 'x_category'}"/>
+                    <filter string="Tanggal" name="group_by_date" context="{'group_by': 'x_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Expense Action Window -->
+    <record id="action_x_pos_expense" model="ir.actions.act_window">
+        <field name="name">Beban Operasional</field>
+        <field name="res_model">x_pos_expense</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_x_pos_expense_search"/>
+    </record>
+</odoo>

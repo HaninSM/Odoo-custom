@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- POS Order Tree / List View -->
+    <record id="view_x_pos_order_tree" model="ir.ui.view">
+        <field name="name">x_pos_order.tree</field>
+        <field name="model">x_pos_order</field>
+        <field name="arch" type="xml">
+            <list string="Transaksi Kasir POS">
+                <field name="x_name"/>
+                <field name="x_customer_name"/>
+                <field name="x_transaction_date"/>
+                <field name="x_payment_method"/>
+                <field name="x_total_amount" widget="monetary" sum="Total Omzet"/>
+                <field name="x_gross_profit" widget="monetary" sum="Total Laba Kotor"/>
+                <field name="x_payment_status" widget="badge" decoration-success="x_payment_status == 'paid'" decoration-warning="x_payment_status == 'pending'" decoration-danger="x_payment_status == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- POS Order Form View -->
+    <record id="view_x_pos_order_form" model="ir.ui.view">
+        <field name="name">x_pos_order.form</field>
+        <field name="model">x_pos_order</field>
+        <field name="arch" type="xml">
+            <form string="Transaksi Kasir POS">
+                <header>
+                    <button name="action_confirm_payment" type="object" string="💳 Selesaikan &amp; Bayar (Potong FIFO)" class="btn btn-primary" invisible="x_payment_status != 'pending'"/>
+                    <button name="action_cancel" type="object" string="❌ Batalkan Transaksi" class="btn btn-secondary" invisible="x_payment_status == 'cancelled'"/>
+                    <field name="x_payment_status" widget="statusbar" statusbar_visible="pending,paid,cancelled" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="x_name" string="Nomor Struk Transaksi"/>
+                        <h1>
+                            <field name="x_name" readonly="x_payment_status == 'paid'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Data Transaksi Kasir">
+                            <field name="x_customer_name" placeholder="Pelanggan Umum" readonly="x_payment_status == 'paid'"/>
+                            <field name="x_transaction_date" string="Tanggal &amp; Jam (Backdate)" readonly="x_payment_status == 'paid'"/>
+                            <field name="x_payment_method" widget="radio" readonly="x_payment_status == 'paid'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Pembayaran &amp; Kembalian">
+                            <field name="x_total_amount" widget="monetary" readonly="1" class="fw-bold fs-3 text-primary" string="Total Penjualan (Rp)"/>
+                            <field name="x_amount_paid" widget="monetary" string="Uang Diterima (CASH)" readonly="x_payment_status == 'paid'"/>
+                            <field name="x_change_amount" widget="monetary" readonly="1" class="fw-bold text-success fs-4" string="Uang Kembalian (Rp)"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="🛒 Rincian Belanja Pelanggan" name="lines">
+                            <field name="x_line_ids" readonly="x_payment_status == 'paid'">
+                                <list editable="bottom" string="Item Belanja">
+                                    <field name="x_unit_id" string="Produk &amp; Satuan Jual" domain="[('x_master_barang_id', '!=', False), ('x_studio_is_purchased', '=', True), ('x_studio_stok_siap_jual', '&gt;', 0)]"/>
+                                    <field name="x_quantity_sold" string="Qty Jual"/>
+                                    <field name="x_unit_price" widget="monetary" string="Harga Satuan (Rp)" readonly="1" force_save="1"/>
+                                    <field name="x_subtotal_price" widget="monetary" string="Subtotal (Rp)" readonly="1" force_save="1"/>
+                                    <field name="x_base_quantity_deducted" string="Bahan Terpotong" readonly="1" optional="show"/>
+                                    <field name="x_batch_id" string="Batch FIFO Terpotong" readonly="1" optional="hide"/>
+                                    <field name="x_cost_price" widget="monetary" string="HPP Modal" readonly="1" optional="hide"/>
+                                    <field name="x_profit" widget="monetary" string="Laba Kotor" readonly="1" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="📊 Analisis Laba Rugi &amp; HPP FIFO" name="financials">
+                            <group>
+                                <group string="Ringkasan Margin Laba">
+                                    <field name="x_total_cost" widget="monetary" readonly="1" string="Total HPP Modal (COGS)"/>
+                                    <field name="x_gross_profit" widget="monetary" readonly="1" class="fw-bold fs-4 text-success" string="Total Laba Kotor Transaksi"/>
+                                </group>
+                                <group string="Catatan Transaksi">
+                                    <field name="x_notes" placeholder="Catatan tambahan di struk belanja..."/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- POS Order Search View -->
+    <record id="view_x_pos_order_search" model="ir.ui.view">
+        <field name="name">x_pos_order.search</field>
+        <field name="model">x_pos_order</field>
+        <field name="arch" type="xml">
+            <search string="Cari Transaksi Kasir">
+                <field name="x_name"/>
+                <field name="x_customer_name"/>
+                <filter string="Lunas" name="filter_paid" domain="[('x_payment_status', '=', 'paid')]"/>
+                <filter string="Belum Bayar" name="filter_pending" domain="[('x_payment_status', '=', 'pending')]"/>
+                <group expand="0" string="Kelompokkan Berdasarkan">
+                    <filter string="Status Pembayaran" name="group_by_status" context="{'group_by': 'x_payment_status'}"/>
+                    <filter string="Metode Pembayaran" name="group_by_method" context="{'group_by': 'x_payment_method'}"/>
+                    <filter string="Tanggal Transaksi" name="group_by_date" context="{'group_by': 'x_transaction_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- POS Order Action Window -->
+    <record id="action_x_pos_order" model="ir.actions.act_window">
+        <field name="name">POS Kasir &amp; Transaksi</field>
+        <field name="res_model">x_pos_order</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_x_pos_order_search"/>
+        <field name="context">{'search_default_filter_paid': 1}</field>
+    </record>
+</odoo>

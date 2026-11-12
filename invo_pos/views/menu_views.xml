@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-Level Root Application Menu -->
+    <menuitem id="menu_invo_pos_root"
+              name="Invo. POS"
+              sequence="10"/>
+
+    <!-- Parent Category Menu 0: POS Kasir & Penjualan -->
+    <menuitem id="menu_invo_pos_sales"
+              name="🛒 POS Kasir &amp; Transaksi"
+              parent="menu_invo_pos_root"
+              sequence="5"/>
+
+    <menuitem id="menu_invo_pos_orders"
+              name="Kasir &amp; Transaksi Penjualan"
+              parent="menu_invo_pos_sales"
+              action="action_x_pos_order"
+              sequence="10"/>
+
+    <!-- Parent Category Menu 1: Katalog & Inventori -->
+    <menuitem id="menu_invo_pos_catalog"
+              name="Katalog &amp; Inventori"
+              parent="menu_invo_pos_root"
+              sequence="10"/>
+
+    <menuitem id="menu_invo_pos_item"
+              name="Master Barang &amp; Satuan Dasar"
+              parent="menu_invo_pos_catalog"
+              action="action_x_pos_item"
+              sequence="10"/>
+
+    <menuitem id="menu_invo_pos_unit"
+              name="Produk &amp; Satuan Jual"
+              parent="menu_invo_pos_catalog"
+              action="action_x_pos_unit"
+              sequence="20"/>
+
+    <menuitem id="menu_invo_pos_batch"
+              name="Kartu Batch Stok FIFO"
+              parent="menu_invo_pos_catalog"
+              action="action_x_pos_batch"
+              sequence="30"/>
+
+    <!-- Parent Category Menu 1.5: Konveksi & Produksi Jahit (Make-to-Stock) -->
+    <menuitem id="menu_invo_pos_manufacturing"
+              name="✂️ Konveksi &amp; Jahit"
+              parent="menu_invo_pos_root"
+              sequence="15"/>
+
+    <menuitem id="menu_invo_pos_production"
+              name="Produksi &amp; Jahit Sprei"
+              parent="menu_invo_pos_manufacturing"
+              action="action_x_pos_production"
+              sequence="10"/>
+
+    <!-- Parent Category Menu 2: Pembelian & Restock -->
+    <menuitem id="menu_invo_pos_purchasing"
+              name="Pembelian &amp; Restock"
+              parent="menu_invo_pos_root"
+              sequence="20"/>
+
+    <menuitem id="menu_invo_pos_purchase"
+              name="Nota Pembelian"
+              parent="menu_invo_pos_purchasing"
+              action="action_x_pos_purchase"
+              sequence="10"/>
+
+    <menuitem id="menu_invo_pos_supplier"
+              name="Supplier &amp; Pemasok"
+              parent="menu_invo_pos_purchasing"
+              action="action_x_pos_supplier"
+              sequence="20"/>
+
+    <!-- Parent Category Menu 3: Biaya & Laporan Operasional -->
+    <menuitem id="menu_invo_pos_finance"
+              name="💸 Biaya &amp; Laporan"
+              parent="menu_invo_pos_root"
+              sequence="30"/>
+
+    <menuitem id="menu_invo_pos_expense"
+              name="Beban Operasional"
+              parent="menu_invo_pos_finance"
+              action="action_x_pos_expense"
+              sequence="10"/>
+</odoo>

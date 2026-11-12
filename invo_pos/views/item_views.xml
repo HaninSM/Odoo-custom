@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Item Tree View -->
+    <record id="view_x_pos_item_tree" model="ir.ui.view">
+        <field name="name">x_pos_item.tree</field>
+        <field name="model">x_pos_item</field>
+        <field name="arch" type="xml">
+            <list string="Master Barang &amp; Satuan Dasar">
+                <field name="x_name"/>
+                <field name="x_base_unit"/>
+                <field name="x_category"/>
+                <field name="x_total_stock" sum="Total Fisik"/>
+                <field name="x_is_active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Item Form View -->
+    <record id="view_x_pos_item_form" model="ir.ui.view">
+        <field name="name">x_pos_item.form</field>
+        <field name="model">x_pos_item</field>
+        <field name="arch" type="xml">
+            <form string="Master Barang &amp; Satuan Dasar">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="x_name" string="Nama Barang Induk"/>
+                        <h1>
+                            <field name="x_name" placeholder="Contoh: Sprei Katun Jepang, Kacamata Hitam, Terigu Segitiga"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Konfigurasi Satuan Dasar Gudang">
+                            <field name="x_base_unit" placeholder="Meter, PCS, Kg, Yard, dsb."/>
+                            <field name="x_category" placeholder="Contoh: Tekstil, Sembako, Aksesoris"/>
+                        </group>
+                        <group string="Informasi Stok &amp; Status">
+                            <field name="x_total_stock" readonly="1"/>
+                            <field name="x_is_active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="🏷️ Satuan Jual &amp; Skema Harga" name="sale_units">
+                            <field name="x_unit_ids">
+                                <list editable="bottom" string="Varian Satuan Jual">
+                                    <field name="x_name" placeholder="e.g. Sprei M, Dus, Lusin"/>
+                                    <field name="x_conversion_factor" string="Kebutuhan Satuan Dasar"/>
+                                    <field name="x_pricing_method"/>
+                                    <field name="x_margin_percentage" invisible="x_pricing_method != 'percentage_margin'"/>
+                                    <field name="x_selling_price" widget="monetary"/>
+                                    <field name="x_stock_mode"/>
+                                    <field name="x_available_sale_stock" string="Stok Siap Jual"/>
+                                    <field name="x_reseller_visible" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="📝 Catatan &amp; Deskripsi" name="notes">
+                            <field name="x_description" placeholder="Catatan tambahan spesifikasi bahan, pabrikan, dsb."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Item Search View -->
+    <record id="view_x_pos_item_search" model="ir.ui.view">
+        <field name="name">x_pos_item.search</field>
+        <field name="model">x_pos_item</field>
+        <field name="arch" type="xml">
+            <search string="Cari Master Barang">
+                <field name="x_name"/>
+                <field name="x_category"/>
+                <field name="x_base_unit"/>
+                <filter string="Aktif" name="filter_active" domain="[('x_is_active', '=', True)]"/>
+                <group expand="0" string="Kelompokkan Berdasarkan">
+                    <filter string="Kategori" name="group_by_category" context="{'group_by': 'x_category'}"/>
+                    <filter string="Satuan Dasar" name="group_by_base_unit" context="{'group_by': 'x_base_unit'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Item Action Window -->
+    <record id="action_x_pos_item" model="ir.actions.act_window">
+        <field name="name">Master Barang</field>
+        <field name="res_model">x_pos_item</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_x_pos_item_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat Master Barang pertama Anda!
+            </p>
+            <p>
+                Daftarkan barang induk dengan satuan dasar (seperti Meter atau PCS), lalu tambahkan pecahan eceran di tab Satuan Jual.
+            </p>
+        </field>
+    </record>
+</odoo>
