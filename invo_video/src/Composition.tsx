@@ -18,6 +18,7 @@ import { AccEp8BalanceSheet, ACC_EP8_DURATION } from "./episodes/accounting/AccE
 import { AccEp9AgedPayables, ACC_EP9_DURATION } from "./episodes/accounting/AccEp9AgedPayables";
 import { AccEp10CreditNotes, ACC_EP10_DURATION } from "./episodes/accounting/AccEp10CreditNotes";
 import { MrpEp1TextileBomSpk, MRP_EP1_DURATION } from "./episodes/mrp/MrpEp1TextileBomSpk";
+import { LivePosCheckoutSpreiXl, LIVE_POS_CHECKOUT_DURATION } from "./episodes/pos/LivePosCheckoutSpreiXl";
 import { tutorialSchema } from "./types";
 
 const defaultProps = {
@@ -258,6 +259,18 @@ export const InvoPosComposition: React.FC = () => {
         id="MrpEp1-TextileBomSpk"
         component={MrpEp1TextileBomSpk}
         durationInFrames={MRP_EP1_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={tutorialSchema}
+        defaultProps={defaultProps}
+      />
+
+      {/* 19. Live POS Checkout & Stock Reduction: Transaksi #35 di sage.odoo.com */}
+      <Composition
+        id="LivePosCheckout-SpreiXl"
+        component={LivePosCheckoutSpreiXl}
+        durationInFrames={LIVE_POS_CHECKOUT_DURATION}
         fps={30}
         width={1920}
         height={1080}
