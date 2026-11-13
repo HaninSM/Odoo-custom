@@ -19,6 +19,7 @@ import { AccEp9AgedPayables, ACC_EP9_DURATION } from "./episodes/accounting/AccE
 import { AccEp10CreditNotes, ACC_EP10_DURATION } from "./episodes/accounting/AccEp10CreditNotes";
 import { MrpEp1TextileBomSpk, MRP_EP1_DURATION } from "./episodes/mrp/MrpEp1TextileBomSpk";
 import { LivePosCheckoutSpreiXl, LIVE_POS_CHECKOUT_DURATION } from "./episodes/pos/LivePosCheckoutSpreiXl";
+import { MasterE2eDecisionTableTest, MASTER_E2E_DECISION_TABLE_DURATION } from "./episodes/testing/MasterE2eDecisionTableTest";
 import { tutorialSchema } from "./types";
 
 const defaultProps = {
@@ -271,6 +272,18 @@ export const InvoPosComposition: React.FC = () => {
         id="LivePosCheckout-SpreiXl"
         component={LivePosCheckoutSpreiXl}
         durationInFrames={LIVE_POS_CHECKOUT_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={tutorialSchema}
+        defaultProps={defaultProps}
+      />
+
+      {/* 20. Master E2E Decision Table Test: Validasi Live Odoo 20.0 (Semua 5 Tahap) */}
+      <Composition
+        id="MasterE2e-DecisionTableTest"
+        component={MasterE2eDecisionTableTest}
+        durationInFrames={MASTER_E2E_DECISION_TABLE_DURATION}
         fps={30}
         width={1920}
         height={1080}
