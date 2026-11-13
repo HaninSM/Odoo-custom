@@ -20,6 +20,7 @@ import { AccEp10CreditNotes, ACC_EP10_DURATION } from "./episodes/accounting/Acc
 import { MrpEp1TextileBomSpk, MRP_EP1_DURATION } from "./episodes/mrp/MrpEp1TextileBomSpk";
 import { LivePosCheckoutSpreiXl, LIVE_POS_CHECKOUT_DURATION } from "./episodes/pos/LivePosCheckoutSpreiXl";
 import { MasterE2eDecisionTableTest, MASTER_E2E_DECISION_TABLE_DURATION } from "./episodes/testing/MasterE2eDecisionTableTest";
+import { LiveAccountingVerification, LIVE_ACCOUNTING_VERIFICATION_DURATION } from "./episodes/accounting/LiveAccountingVerification";
 import { tutorialSchema } from "./types";
 
 const defaultProps = {
@@ -284,6 +285,18 @@ export const InvoPosComposition: React.FC = () => {
         id="MasterE2e-DecisionTableTest"
         component={MasterE2eDecisionTableTest}
         durationInFrames={MASTER_E2E_DECISION_TABLE_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={tutorialSchema}
+        defaultProps={defaultProps}
+      />
+
+      {/* 21. Live Accounting Verification: Jurnal, Kliring QRIS, Laba Rugi di sage.odoo.com */}
+      <Composition
+        id="LiveAccountingVerification"
+        component={LiveAccountingVerification}
+        durationInFrames={LIVE_ACCOUNTING_VERIFICATION_DURATION}
         fps={30}
         width={1920}
         height={1080}
