@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Form View MRP Production (SPK Jahit Konveksi) -->
+    <record id="view_mrp_production_form_inherit_spk" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.spk</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Header Button untuk Cetak SPK Jahit -->
+            <xpath expr="//header" position="inside">
+                <button name="%(action_report_spk_jahit)d" string="Cetak SPK Konveksi" type="action" class="btn-secondary" icon="fa-print"/>
+            </xpath>
+
+            <!-- Banner Nomor SPK di Header Form -->
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert" style="margin-bottom: 12px; padding: 10px 16px;">
+                    <div>
+                        <strong>No. SPK Konveksi: </strong>
+                        <field name="x_spk_number" readonly="1" class="oe_inline font-weight-bold" style="font-size: 15px;"/>
+                    </div>
+                    <div>
+                        <span invisible="not x_is_pushed_to_pos" class="badge badge-success" style="font-size: 12px; padding: 6px 12px;">
+                            ✓ Stok Terhubung ke Rak Kasir POS
+                        </span>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- Tab Khusus SPK Konveksi & Alokasi Kasir -->
+            <xpath expr="//notebook" position="inside">
+                <page string="🧵 SPK Konveksi &amp; Alokasi Kasir" name="spk_konveksi">
+                    <group>
+                        <group string="Penugasan Penjahit &amp; Jadwal">
+                            <field name="x_tailor_id" placeholder="Pilih mitra penjahit borongan"/>
+                            <field name="x_target_completion_date"/>
+                        </group>
+                        <group string="Bahan Mentah &amp; Batch FIFO (Invo POS)">
+                            <field name="x_pos_item_id"/>
+                            <field name="x_fifo_batch_id"/>
+                            <field name="x_pos_unit_id"/>
+                        </group>
+                    </group>
+
+                    <group string="Kalkulasi Biaya Aktual &amp; HPP Komposit">
+                        <group>
+                            <field name="x_labor_cost_per_pcs"/>
+                            <field name="x_accessory_cost_per_pcs"/>
+                        </group>
+                        <group>
+                            <field name="x_total_labor_cost" widget="monetary"/>
+                            <field name="x_total_accessory_cost" widget="monetary"/>
+                            <field name="x_actual_composite_hpp" widget="monetary" decoration-bf="1" decoration-info="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Pengaturan Integrasi Kasir">
+                        <group>
+                            <field name="x_auto_push_pos" widget="boolean_toggle"/>
+                            <field name="x_is_pushed_to_pos" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Tree View MRP Production -->
+    <record id="view_mrp_production_tree_inherit_spk" model="ir.ui.view">
+        <field name="name">mrp.production.tree.inherit.spk</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="x_spk_number" optional="show" decoration-bf="1"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="x_tailor_id" optional="show"/>
+                <field name="x_actual_composite_hpp" optional="show" widget="monetary"/>
+                <field name="x_is_pushed_to_pos" optional="show" widget="boolean"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

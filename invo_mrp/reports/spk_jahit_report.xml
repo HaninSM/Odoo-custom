@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action Report Cetak SPK Jahit PDF -->
+    <record id="action_report_spk_jahit" model="ir.actions.report">
+        <field name="name">Surat Perintah Kerja (SPK) Jahit</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">invo_mrp.report_spk_jahit_template</field>
+        <field name="report_file">invo_mrp.report_spk_jahit_template</field>
+        <field name="print_report_name">'SPK_JAHIT_%s' % (object.x_spk_number or object.name)</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Template QWeb Cetak SPK Jahit -->
+    <template id="report_spk_jahit_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: #222;">
+                        <!-- Header Dokumen -->
+                        <div class="row mb-4 pb-2 border-bottom">
+                            <div class="col-8">
+                                <h3 class="font-weight-bold" style="color: #714B67; margin-bottom: 4px;">
+                                    SURAT PERINTAH KERJA (SPK) JAHIT KONVEKSI
+                                </h3>
+                                <p class="text-muted mb-0">Divisi Produksi &amp; Konveksi Sprei • Toko Sprei Jendral</p>
+                            </div>
+                            <div class="col-4 text-right">
+                                <h4 class="font-weight-bold text-dark" t-field="o.x_spk_number"/>
+                                <span class="badge badge-secondary" t-field="o.name"/>
+                            </div>
+                        </div>
+
+                        <!-- Info Penugasan & Mitra -->
+                        <div class="row mb-4 p-3 bg-light rounded border">
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr>
+                                        <td class="font-weight-bold" style="width: 140px;">Mitra Penjahit:</td>
+                                        <td><span t-field="o.x_tailor_id.name" class="font-weight-bold text-primary"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Tanggal Diterbitkan:</td>
+                                        <td><span t-field="o.date_planned_start"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Batas Target Selesai:</td>
+                                        <td><span t-field="o.x_target_completion_date" class="text-danger font-weight-bold"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr>
+                                        <td class="font-weight-bold" style="width: 150px;">Target Varian Jadi:</td>
+                                        <td><strong t-field="o.product_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Jumlah Produksi:</td>
+                                        <td><span class="badge badge-success" style="font-size: 14px;"><t t-esc="o.product_qty"/> Pcs</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Batch Kain FIFO:</td>
+                                        <td><span t-field="o.x_fifo_batch_id.x_name"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Instruksi Bahan Baku (BOM Lines) -->
+                        <h5 class="font-weight-bold mt-4 mb-2" style="color: #333;">1. Rincian Pemotongan Bahan Baku &amp; Aksesoris:</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead style="background-color: #f1f3f5;">
+                                <tr>
+                                    <th>Komponen Bahan</th>
+                                    <th>Peran Tekstil</th>
+                                    <th class="text-right">Kebutuhan per Unit</th>
+                                    <th class="text-right">Total Diberikan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.move_raw_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.product_id.name"/></td>
+                                        <td>
+                                            <t t-if="'Kain' in line.product_id.name">Kain Katun Utama</t>
+                                            <t t-elif="'Karet' in line.product_id.name">Karet Sudut 4 Sisi</t>
+                                            <t t-else="">Aksesoris &amp; Kemasan</t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="'%.2f' % (line.product_uom_qty / (o.product_qty or 1.0))"/> <span t-field="line.product_uom.name"/>
+                                        </td>
+                                        <td class="text-right font-weight-bold">
+                                            <span t-field="line.product_uom_qty"/> <span t-field="line.product_uom.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Instruksi Kerja Konveksi -->
+                        <h5 class="font-weight-bold mt-4 mb-2" style="color: #333;">2. Petunjuk Teknis Pengerjaan Jahit:</h5>
+                        <div class="p-3 border rounded bg-white" style="line-height: 1.6;">
+                            <ul class="mb-0 pl-3">
+                                <li>Pastikan potongan kain siku presisi sesuai ukuran standar varian (Toleransi potong: maks 0.5 cm).</li>
+                                <li>Pasang karet elastis sudut sepanjang <strong>25–30 cm</strong> pada keempat sudut sprei dengan jahitan ganda (double-stitch).</li>
+                                <li>Lakukan obras keliling rapi pada semua tepian sambungan kain sebelum finishing.</li>
+                                <li>Sisa potongan kain di atas 50 cm wajib dikembalikan ke gudang sebagai potongan sarung bantal. Sisa perca kecil ditimbang sebagai scrap.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Upah & Tanda Tangan -->
+                        <div class="row mt-5 pt-3">
+                            <div class="col-6">
+                                <div class="p-2 border rounded text-center bg-light">
+                                    <span class="text-muted d-block">Tarif Borongan Jahit:</span>
+                                    <h4 class="font-weight-bold text-success mb-0">
+                                        Rp <t t-esc="'{:,.0f}'.format(o.x_labor_cost_per_pcs)"/> / pcs
+                                    </h4>
+                                    <small class="text-muted">(Total Estimasi Upah: Rp <t t-esc="'{:,.0f}'.format(o.x_total_labor_cost)"/>)</small>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <p class="mb-5 font-weight-bold">Penjahit Pelaksana,</p>
+                                <p class="mt-4 border-top pt-2"><span t-field="o.x_tailor_id.name"/></p>
+                            </div>
+                            <div class="col-3 text-center">
+                                <p class="mb-5 font-weight-bold">Kepala Produksi Konveksi,</p>
+                                <p class="mt-4 border-top pt-2">( .................................... )</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

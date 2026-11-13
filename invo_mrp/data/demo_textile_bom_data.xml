@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Komponen Aksesoris Jahit Tekstil -->
+        <record id="product_karet_elastis" model="product.product">
+            <field name="name">Karet Elastis Sudut 2.5cm</field>
+            <field name="type">consu</field>
+            <field name="standard_price">2500.0</field>
+            <field name="list_price">3500.0</field>
+            <field name="uom_id" ref="uom.product_uom_meter"/>
+            <field name="uom_po_id" ref="uom.product_uom_meter"/>
+        </record>
+
+        <record id="product_kemasan_mika" model="product.product">
+            <field name="name">Kemasan Mika &amp; Hangtag Sprei Jendral</field>
+            <field name="type">consu</field>
+            <field name="standard_price">2000.0</field>
+            <field name="list_price">3000.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+    </data>
+</odoo>

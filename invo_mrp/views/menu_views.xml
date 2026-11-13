@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action Menu: SPK Jahit Konveksi -->
+    <record id="action_mrp_production_spk_konveksi" model="ir.actions.act_window">
+        <field name="name">SPK Jahit Konveksi</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree,form,kanban,calendar</field>
+        <field name="context">{'default_x_auto_push_pos': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat Surat Perintah Kerja (SPK) Jahit Konveksi Baru!
+            </p>
+            <p>
+                Kelola pemotongan bahan kain katun FIFO, penugasan penjahit borongan, dan alokasi otomatis sprei jadi ke rak kasir POS.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action Menu: BoM Standar Tekstil -->
+    <record id="action_mrp_bom_textile" model="ir.actions.act_window">
+        <field name="name">BoM Konveksi &amp; Sprei</field>
+        <field name="res_model">mrp.bom</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('x_is_textile_bom', '=', True)]</field>
+        <field name="context">{'default_x_is_textile_bom': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat Bill of Materials (BoM) Tekstil Baru!
+            </p>
+            <p>
+                Tentukan rasio pemotongan kain katun, aksesoris karet sudut, dan standar HPP komposit varian kasir.
+            </p>
+        </field>
+    </record>
+
+    <!-- Submenu di dalam Invo POS (jika modul invo_pos aktif) -->
+    <menuitem id="menu_invo_mrp_root"
+              name="🧵 Konveksi &amp; SPK"
+              parent="invo_pos.menu_invo_pos_root"
+              sequence="25"/>
+
+    <menuitem id="menu_invo_mrp_spk_list"
+              name="Surat Perintah Kerja (SPK)"
+              parent="menu_invo_mrp_root"
+              action="action_mrp_production_spk_konveksi"
+              sequence="10"/>
+
+    <menuitem id="menu_invo_mrp_bom_list"
+              name="BoM Standar Sprei"
+              parent="menu_invo_mrp_root"
+              action="action_mrp_bom_textile"
+              sequence="20"/>
+</odoo>

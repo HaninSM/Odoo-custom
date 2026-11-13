@@ -8,12 +8,20 @@ Repositori terintegrasi untuk kustomisasi **Odoo 20.0 Enterprise** pada ekosiste
 
 ```text
 Odoo/
-├── invo_pos/                  # Modul Kustom Odoo 20.0 Enterprise
+├── invo_pos/                  # Modul Kustom Odoo 20.0 Enterprise (Kasir POS & Stock)
 │   ├── models/                # Logika ORM (FIFO lot, dual stock, split payment)
 │   ├── views/                 # XML form & tree views Odoo Enterprise
 │   ├── data/                  # Master data & sequences
 │   ├── security/              # Access rights (ir.model.access.csv)
 │   ├── __manifest__.py        # Manifest modul
+│   └── __init__.py
+├── invo_mrp/                  # Modul Ekstensi Manufaktur Konveksi & BoM Tekstil
+│   ├── models/                # mrp.bom tekstil, mrp.production (SPK Jahit), stock.scrap
+│   ├── views/                 # View inheritance BoM & SPK Konveksi
+│   ├── data/                  # Sequence SPK & master aksesoris
+│   ├── reports/               # QWeb PDF Cetak Surat Perintah Kerja (SPK) Jahit
+│   ├── security/              # Access rights
+│   ├── __manifest__.py
 │   └── __init__.py
 ├── invo_video/                # Generator Video Walkthrough Realistis (Remotion)
 │   ├── src/
@@ -26,7 +34,8 @@ Odoo/
 ├── TokoJendral/               # Arsitektur & Dokumentasi Uji Sistem
 │   ├── docs/                  # Decision Tables ISTQB (Hulu, Tengah, Hilir, Muara, Pelengkap)
 │   └── README.md
-├── invo_pos.zip               # Arsip instalasi modul Odoo siap deploy
+├── invo_pos.zip               # Arsip instalasi modul Invo POS siap deploy
+├── invo_mrp.zip               # Arsip instalasi modul Invo MRP Konveksi siap deploy
 ├── invo_pos_items_viewer.html # Web viewer interaktif master data POS
 └── .gitignore
 ```
