@@ -17,6 +17,7 @@ import { AccEp7ProfitLoss, ACC_EP7_DURATION } from "./episodes/accounting/AccEp7
 import { AccEp8BalanceSheet, ACC_EP8_DURATION } from "./episodes/accounting/AccEp8BalanceSheet";
 import { AccEp9AgedPayables, ACC_EP9_DURATION } from "./episodes/accounting/AccEp9AgedPayables";
 import { AccEp10CreditNotes, ACC_EP10_DURATION } from "./episodes/accounting/AccEp10CreditNotes";
+import { MrpEp1TextileBomSpk, MRP_EP1_DURATION } from "./episodes/mrp/MrpEp1TextileBomSpk";
 import { tutorialSchema } from "./types";
 
 const defaultProps = {
@@ -245,6 +246,18 @@ export const InvoPosComposition: React.FC = () => {
         id="AccEp10-CreditNotes"
         component={AccEp10CreditNotes}
         durationInFrames={ACC_EP10_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={tutorialSchema}
+        defaultProps={defaultProps}
+      />
+
+      {/* 18. Modul Invo MRP: Standarisasi BoM Tekstil & SPK Jahit Konveksi */}
+      <Composition
+        id="MrpEp1-TextileBomSpk"
+        component={MrpEp1TextileBomSpk}
+        durationInFrames={MRP_EP1_DURATION}
         fps={30}
         width={1920}
         height={1080}
