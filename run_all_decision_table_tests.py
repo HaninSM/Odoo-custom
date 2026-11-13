@@ -131,12 +131,21 @@ def run_all_tests():
         'x_name': 'TRX-202611-0002',
         'x_customer_name': 'Ibu Sinta (Walk-In Customer)',
         'x_payment_method': 'QRIS',
-        'x_total_amount': 112500.0,
-        'x_total_cost': 75000.0,
-        'x_gross_profit': 37500.0,
         'x_amount_paid': 112500.0,
         'x_change_amount': 0.0,
         'x_payment_status': 'paid'
+    }])
+    # Buat item detail baris penjualan (x_pos_order_line)
+    order_line_id = models.execute_kw(db, uid, api_key, 'x_pos_order_line', 'create', [{
+        'x_order_id': order_id,
+        'x_unit_id': variant_id,
+        'x_unit_price': 112500.0,
+        'x_cost_price': 75000.0,
+        'x_quantity_sold': 1.0,
+        'x_subtotal_price': 112500.0,
+        'x_subtotal_cost': 75000.0,
+        'x_profit': 37500.0,
+        'x_batch_id': batch_id
     }])
     # Kuota kasir berkurang 1 pcs (10 -> 9 pcs)
     models.execute_kw(db, uid, api_key, 'x_master_barang_line_022fd', 'write', [[variant_id], {'x_studio_kuota_alokasi': 9.0}])
